@@ -1,0 +1,16 @@
+{
+	"<start>": "S",
+	"S": "NP VP",
+	"NP": "DET NN | PRP$ NN", 
+	"VP": "vbz | MD VB | VBZ RB | VBD PP",
+	"PP": "IN NP",
+	"DET": "dt",
+	"NN": "nn",
+	"PRP$": "prp$",
+	"VBD": "vbd",
+	"VBZ": "vbz",
+	"VB": "vb",
+	"MD": "md",
+	"IN": "in",
+	"RB": "rb"
+}
