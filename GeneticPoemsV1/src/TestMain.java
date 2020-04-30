@@ -72,7 +72,15 @@ public class TestMain {
 
 		System.out.println();
 		//System.out.println(firstPoem.printPoemTree());
-		System.out.println(firstPoem);
+//		double[] fitnessPL = FitnessCalculator.calculateMetricFitness(firstPoem);
+//		for (int i= 0; i<firstPoem.length(); i++) {
+//			System.out.println(firstPoem.getPoemString()[i]);
+//			System.out.println(RiTa.getStresses(firstPoem.getPoemString()[i]));
+//			System.out.println(fitnessPL[i]);
+//		}
+		//System.out.println(firstPoem);
+		FitnessCalculator.calculateFitness(firstPoem);
+		System.out.println(firstPoem.getFitness());
 		//System.out.println(secondPoem);
 //		Poem[] crossedover = Recombination.lineCrossover(firstPoem, secondPoem);
 //		for (Poem poem : crossedover) {
@@ -83,8 +91,8 @@ public class TestMain {
 //		System.out.println(firstPoem);
 //		System.out.println(secondPoem);
 		
-		Mutation.multipleWordMutation(firstPoem);
-		System.out.println(firstPoem);
+//		Mutation.multipleWordMutation(firstPoem);
+//		System.out.println(firstPoem);
 		
 		//System.out.println(firstPoem.getPoemTree()[0]);
 		
@@ -105,7 +113,9 @@ public class TestMain {
 //		}
 		
 		//System.out.println("Fitness: " + FitnessCalculator.calculateFitness(firstPoem));
-		
+
+		System.out.println(RiTa.isRhyme("shyly", "operationally"));
+			
 		
 	}
 
