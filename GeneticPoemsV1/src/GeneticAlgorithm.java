@@ -1,17 +1,28 @@
+import java.awt.EventQueue;
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
+
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 
 public class GeneticAlgorithm {
 	private static int popSize = 1000;
-	private static int maxGenNum = 50;
+	private static int maxGenNum = 40;
 	private static int poemsSize = 4;
 	private static double mutationRate = 0.0;
 	private static double crossoverRate = 0.95;
 	private static int tournamentSize = 2;
 	private static int eliteSize = popSize/100;
+	private static XYSeriesCollection fitnessData;
 	
 	public static void main(String[] args) {
 		geneticAlgorithm(true);
+		
+		EventQueue.invokeLater(() -> {
+			var fitnessGraph = new FitnessGraph();
+			fitnessGraph.initializeUI(fitnessData);
+			fitnessGraph.setVisible(true);
+		});
 	}
 	
 	private static void geneticAlgorithm(boolean elitism) {
@@ -34,6 +45,10 @@ public class GeneticAlgorithm {
 		System.out.println(genNum + ": " + pop.getAvrgFitness());
 //		System.out.println(pop.getIndividuals()[23]);
 //		System.out.println(pop.getIndividuals()[12]);
+		XYSeries averageFitness = new XYSeries("average fitness");
+		XYSeries fittestIndividual = new XYSeries("fittest individual");
+		averageFitness.add(genNum, pop.getAvrgFitness());
+		fittestIndividual.add(genNum, fittest.getFitness());
 		
 		for (genNum=1; genNum<maxGenNum; genNum++) {			
 
@@ -69,13 +84,18 @@ public class GeneticAlgorithm {
 			}
 			pop.calculateAverageFitness();
 			System.out.println(genNum + ": " + pop.getAvrgFitness());
+			averageFitness.add(genNum, pop.getAvrgFitness());
+			fittest = pop.getFittest();
+			fittestIndividual.add(genNum, fittest.getFitness());
 		}
 		fittest = pop.getFittest();
 		System.out.println("fittest: " + fittest.getFitness());
 		System.out.println(fittest);
 		System.out.println(pop.getIndividuals()[23]);
 		System.out.println(pop.getIndividuals()[12]);
-		
-		
+		fitnessData = new XYSeriesCollection();
+		fitnessData.addSeries(averageFitness);
+		fitnessData.addSeries(fittestIndividual);
+
 	}
 }
