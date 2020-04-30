@@ -5,14 +5,24 @@ public class Poem {
 	//-> nach jeder rekombination muss unbedingt der String geupdated werden
 	//private String[] poemString;
 	private double fitness = -1;
+	private double[] fitnessPerLine;
 	
 	public Poem(Tree[] poemTree) {
 		this.poemTree = poemTree;
 
+		//this.fitnessPerLine = new double[length()];
+		
 //		this.poemString = new String[poemTree.length];
 //		for (int i=0; i<poemString.length; i++) {
 //			this.poemString[i] = poemTree[i].toSentence();
 //		}
+	}
+	
+	//copy constructor
+	public Poem(Poem poem) {
+		this.poemTree = poem.poemTree;
+		this.fitness = poem.fitness;
+		this.fitnessPerLine = poem.fitnessPerLine;
 	}
 	
 	public String toString() {
@@ -58,6 +68,14 @@ public class Poem {
 	
 	public int length() {
 		return poemTree.length;
+	}
+
+	public double[] getFitnessPerLine() {
+		return fitnessPerLine;
+	}
+
+	public void setFitnessPerLine(double[] fitnessPerLine) {
+		this.fitnessPerLine = fitnessPerLine;
 	}
 
 }

@@ -1,20 +1,24 @@
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 public class GeneticAlgorithm {
 	private static int popSize = 1000;
-	private static int maxGenNum = 20;
+	private static int maxGenNum = 50;
 	private static int poemsSize = 4;
-	private static double mutationRate = 0.3;
-	private static double crossoverRate = 0.70;
+	private static double mutationRate = 0.0;
+	private static double crossoverRate = 0.95;
 	private static int tournamentSize = 2;
+	private static int eliteSize = popSize/100;
 	
 	public static void main(String[] args) {
-		geneticAlgorithm();
+		geneticAlgorithm(true);
 	}
 	
-	private static void geneticAlgorithm() {
-		int genNum;
+	private static void geneticAlgorithm(boolean elitism) {
+		if(!elitism) {
+			eliteSize = 0;
+		}
+		int genNum = 0;
 		Population pop = new Population(popSize);
 		pop.initialzePopulation(poemsSize);
 		
@@ -23,28 +27,48 @@ public class GeneticAlgorithm {
 			FitnessCalculator.calculateFitness(pop.getIndividuals()[i]);
 		}
 		pop.calculateAverageFitness();
-		System.out.println(pop.getAvrgFitness());
 		
 		Poem fittest = pop.getFittest();
 		System.out.println("fittest: " + fittest.getFitness());
 		System.out.println(fittest);
-		System.out.println(pop.getIndividuals()[23]);
-		System.out.println(pop.getIndividuals()[12]);
+		System.out.println(genNum + ": " + pop.getAvrgFitness());
+//		System.out.println(pop.getIndividuals()[23]);
+//		System.out.println(pop.getIndividuals()[12]);
 		
-		for (genNum=0; genNum<maxGenNum; genNum++) {
-			Poem[] selected = new Poem[popSize];
-			for (int i=0; i<popSize; i++) {
-				selected[i] = Selection.tournamentSelection(tournamentSize, pop);
+		for (genNum=1; genNum<maxGenNum; genNum++) {			
+
+			Poem[] newGeneration = new Poem[popSize];
+			
+			int i = 0;
+			if (elitism) {
+				Poem[] sortedPop = pop.getSortedCopy();
+				Poem[] elite = Arrays.copyOfRange(sortedPop, 0, eliteSize);
+				while (i<elite.length) {
+					newGeneration[i] = elite[i];
+					i++;
+				}
 			}
-			for (int i=0; i<popSize; i+=2) {
-				Recombination.crossover(crossoverRate, selected[i], selected[i+1]);
+			
+			while (i<popSize) {
+				Poem parent1 = Selection.tournamentSelection(tournamentSize, pop);
+				Poem parent2 = Selection.tournamentSelection(tournamentSize, pop);
+				Poem[] children = Recombination.crossover(crossoverRate, parent1, parent2);
+				Poem child1 = children[0];
+				Mutation.mutate(mutationRate, child1);
+				Poem child2 = children[1];
+				Mutation.mutate(mutationRate, child2);
+				newGeneration[i] = child1;
+				newGeneration[i+1] = child2;
+				i+=2;
 			}
-			for (int i=0; i<popSize; i++) {
-				Mutation.mutate(mutationRate, selected[i]);
+			
+			pop.setIndividuals(newGeneration);
+			
+			for (int j=0; j<popSize; j++) {
+				FitnessCalculator.calculateFitness(pop.getIndividuals()[j]);
 			}
-			pop.setIndividuals(selected);
 			pop.calculateAverageFitness();
-			System.out.println(pop.getAvrgFitness());
+			System.out.println(genNum + ": " + pop.getAvrgFitness());
 		}
 		fittest = pop.getFittest();
 		System.out.println("fittest: " + fittest.getFitness());

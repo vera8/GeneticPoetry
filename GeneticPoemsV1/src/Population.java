@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Population {
 	private int size;
@@ -62,5 +64,21 @@ public class Population {
 			}
 		}
 		return fittest;
+	}
+	
+	public Poem[] getSortedCopy() {
+		Poem[] popCopy = individuals.clone(); 
+		Arrays.sort(popCopy, new Comparator<Poem>() {
+			@Override
+			public int compare(Poem poem1, Poem poem2) {
+				if (poem1.getFitness() > poem2.getFitness()) {
+					return -1;
+				} else if (poem1.getFitness() < poem2.getFitness()) {
+					return 1;
+				}
+				return 0;
+			}
+		});
+		return popCopy;
 	}
 }
