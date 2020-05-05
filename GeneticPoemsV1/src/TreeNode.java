@@ -144,11 +144,11 @@ public class TreeNode {
 	}
 	
 	public TreeNode copySubtree() {
-		TreeNode subtree = new TreeNode(this.category, this.leftChild);
-		this.leftChild.copySubtree();
+		TreeNode subtree = new TreeNode(this.category);
+		subtree.leftChild = this.leftChild.copySubtree();
+
 		if (this.rightChild != null) {
-			subtree.setRightChild(this.rightChild);
-			this.rightChild.copySubtree();
+			subtree.rightChild = this.rightChild.copySubtree();
 		}
 		return subtree;
 	}

@@ -20,7 +20,10 @@ public class Poem {
 	
 	//copy constructor
 	public Poem(Poem poem) {
-		this.poemTree = poem.poemTree;
+		this.poemTree = new Tree[poem.length()];
+		for (int i=0; i<poem.length(); i++) {
+				this.poemTree[i] = new Tree(poem.poemTree[i]);
+		}
 		this.fitness = poem.fitness;
 		this.fitnessPerLine = poem.fitnessPerLine;
 	}
