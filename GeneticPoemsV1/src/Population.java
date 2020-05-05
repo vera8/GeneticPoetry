@@ -67,7 +67,10 @@ public class Population {
 	}
 	
 	public Poem[] getSortedCopy() {
-		Poem[] popCopy = individuals.clone(); 
+		Poem[] popCopy = new Poem[this.size];
+		for (int i=0; i<this.size; i++) {
+			popCopy[i] = new Poem(individuals[i]);
+		}
 		Arrays.sort(popCopy, new Comparator<Poem>() {
 			@Override
 			public int compare(Poem poem1, Poem poem2) {
@@ -80,5 +83,30 @@ public class Population {
 			}
 		});
 		return popCopy;
+	}
+	
+	public double calculateFitnessVariance() {
+		double variance = 0;
+		for (int i=0; i<size; i++) {
+			variance += Math.pow((individuals[i].getFitness() - avrgFitness), 2);
+		}
+		variance = variance/size;
+		return variance;
+	}
+	
+	public int calculatePoemVariance() {
+		int differenceCount = 0;
+		for (int i=0; i<size; i++) {
+			for (int j=i+1; j<size; j++) {
+				for (int k=0; k<individuals[i].getPoemString().length; k++) {
+					String line1 = individuals[i].getPoemString()[k];
+					String line2 = individuals[j].getPoemString()[k];
+					if (!line1.equals(line2)) {
+						differenceCount++;
+					} 
+				}
+			}
+		}
+		return differenceCount;
 	}
 }

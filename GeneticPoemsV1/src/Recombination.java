@@ -7,21 +7,19 @@ public class Recombination {
 	
 	public static Poem[] crossover(double crossoverRate, Poem poem1, Poem poem2) {
 		double p = ThreadLocalRandom.current().nextDouble();
-		Poem[] children;
+
 		if (p<=crossoverRate) {
 			Poem child1 = new Poem(poem1);
 			Poem child2 = new Poem(poem2);
-			children = onePointLineCrossover(child1, child2);
-//			int r = ThreadLocalRandom.current().nextInt(0, rNum);
-//			if(r==0) {
-//				onePointLineCrossover(poem1, poem2);
-//			} else if(r==1) {
-//				subtreeCrossover(poem1, poem2);
-//			}
-		} else {
-			children = new Poem[]{poem1, poem2};
+			//children = onePointLineCrossover(child1, child2);
+			int r = ThreadLocalRandom.current().nextInt(0, rNum);
+			if(r==0) {
+				return onePointLineCrossover(poem1, poem2);
+			} else if(r==1) {
+				return subtreeCrossover(poem1, poem2);
+			}
 		}
-		return children;
+		return new Poem[]{poem1, poem2};
 	}
 
 	public static Poem[] onePointLineCrossover(Poem poem1, Poem poem2) {
@@ -45,6 +43,9 @@ public class Recombination {
 			if (/*p>=ThreadLocalRandom.current().nextDouble()*/ true) {
 				Tree currentLineP1 = poem1.getPoemTree()[i];
 				Tree currentLineP2 = poem2.getPoemTree()[i];
+				if (currentLineP1.toSentence().equals(currentLineP2.toSentence())) {
+					continue;
+				}
 				int index = ThreadLocalRandom.current().nextInt(1, currentLineP1.getPreorderArray().size());
 				String category = currentLineP1.getPreorderArray().get(index).getCategory();
 				//System.out.println(category);

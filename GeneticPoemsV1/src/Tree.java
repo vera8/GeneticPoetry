@@ -10,6 +10,12 @@ public class Tree {
 		preorderArray = fillPreorderArray();
 	}
 	
+	//Copy constructor
+	public Tree(Tree tree) {
+		this.root = tree.root.copySubtree();
+		this.preorderArray = fillPreorderArray();
+	}
+	
 	public String toString() {
 		String toString = root.toString();
 		

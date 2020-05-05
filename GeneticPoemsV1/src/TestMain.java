@@ -115,8 +115,14 @@ public class TestMain {
 		//System.out.println("Fitness: " + FitnessCalculator.calculateFitness(firstPoem));
 
 		System.out.println(RiTa.isRhyme("shyly", "operationally"));
-			
 		
+		System.out.println();
+		FitnessCalculator.calculateFitness(firstPoem);
+		System.out.println("fitness:" + firstPoem.getFitness());
+		FitnessCalculator.calculateFitness(firstPoem);
+		System.out.println("fitness:" + firstPoem.getFitness());
+		FitnessCalculator.calculateFitness(firstPoem);
+		System.out.println("fitness:" + firstPoem.getFitness());
 	}
 
 }
