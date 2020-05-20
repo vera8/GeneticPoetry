@@ -1,9 +1,12 @@
+import rita.RiTa;
 
 public class Poem {
 	private Tree[] poemTree;
 	//speichern als string und als baum könnte zu problemen bei rekombination führen 
 	//-> nach jeder rekombination muss unbedingt der String geupdated werden
 	//private String[] poemString;
+	private double metricFitness =-1;
+	private double rhymeFitness = -1;
 	private double fitness = -1;
 	private double[] fitnessPerLine;
 	
@@ -79,6 +82,30 @@ public class Poem {
 
 	public void setFitnessPerLine(double[] fitnessPerLine) {
 		this.fitnessPerLine = fitnessPerLine;
+	}
+	
+	public void setMetricFitness(double metricFitness) {
+		this.metricFitness = metricFitness;
+	}
+
+	public double getMetricFitness() {
+		return metricFitness;
+	}
+	
+	public void setRhymeFitness(double rhymeFitness) {
+		this.rhymeFitness = rhymeFitness;
+	}
+
+	public double getRhymeFitness() {
+		return rhymeFitness;
+	}
+	
+	public String printWithStresses() {
+		String toString = "";
+		for (String line : getPoemString()) {
+			toString += line + "\n" + RiTa.getStresses(line) + "\n";
+		}
+		return toString;
 	}
 
 }

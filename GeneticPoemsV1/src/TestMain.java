@@ -1,5 +1,7 @@
 import rita.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public class TestMain {
 
@@ -7,7 +9,6 @@ public class TestMain {
 		RandomPoemGenerator poemGenerator = new RandomPoemGenerator();
 		Poem firstPoem = poemGenerator.generatePoem(4);
 		Poem secondPoem = poemGenerator.generatePoem(4);
-		
 //		String[][] poems = new String[100][];
 		
 //		for (int i=0; i<100; i++) {
@@ -33,7 +34,7 @@ public class TestMain {
 				{"VP", "VB ADV"},
 				{"DET", "the"},
 				{"NN", "cat", "dog"},
-				{"VB", "meows", "farts", "chews"},
+				{"VB", "meows", "farts", "chews", "eats", "purrs", "screams", "laughs", "claps", "jumps"},
 				{"ADV", "loudly", "quietly"}
 		};
 									
@@ -78,10 +79,10 @@ public class TestMain {
 //			System.out.println(RiTa.getStresses(firstPoem.getPoemString()[i]));
 //			System.out.println(fitnessPL[i]);
 //		}
-		//System.out.println(firstPoem);
+		System.out.println(firstPoem);
 		FitnessCalculator.calculateFitness(firstPoem);
 		System.out.println(firstPoem.getFitness());
-		//System.out.println(secondPoem);
+		System.out.println(secondPoem);
 //		Poem[] crossedover = Recombination.lineCrossover(firstPoem, secondPoem);
 //		for (Poem poem : crossedover) {
 //			System.out.println(poem);
@@ -114,15 +115,65 @@ public class TestMain {
 		
 		//System.out.println("Fitness: " + FitnessCalculator.calculateFitness(firstPoem));
 
-		System.out.println(RiTa.isRhyme("shyly", "operationally"));
+//		System.out.println(RiTa.isRhyme("shyly", "operationally"));
+//		
+//		System.out.println();
+//		FitnessCalculator.calculateFitness(firstPoem);
+//		System.out.println("fitness:" + firstPoem.getFitness());
+//		FitnessCalculator.calculateFitness(firstPoem);
+//		System.out.println("fitness:" + firstPoem.getFitness());
+//		FitnessCalculator.calculateFitness(firstPoem);
+//		System.out.println("fitness:" + firstPoem.getFitness());
 		
-		System.out.println();
-		FitnessCalculator.calculateFitness(firstPoem);
-		System.out.println("fitness:" + firstPoem.getFitness());
-		FitnessCalculator.calculateFitness(firstPoem);
-		System.out.println("fitness:" + firstPoem.getFitness());
-		FitnessCalculator.calculateFitness(firstPoem);
-		System.out.println("fitness:" + firstPoem.getFitness());
-	}
+		for (int i=0; i<poemGenerator.getGrammar().length; i++) {
+			for (int j=0; j<poemGenerator.getGrammar()[i].length; j++) {
+				System.out.print(poemGenerator.getGrammar()[i][j] + ", ");
+				
+			}
+			System.out.println();
+		}
+		
+		System.out.println(FitnessCalculator.isRhyme("must", "sadist"));
+		System.out.println(FitnessCalculator.isRhyme("charitably ", "warningly"));
+		System.out.println(RiTa.getPhonemes("shows") + " : " + RiTa.getPhonemes("snows"));
+				
+		TreeMap<String, ArrayList<String>> rhymeList = writeRhymeWordList(100);
+		for (String pos : rhymeList.keySet()) {
+			System.out.println(pos + ": " + rhymeList.get(pos));
+		}
 
+	}
+	
+	public static TreeMap<String, ArrayList<String>> writeRhymeWordList(int length) {
+		TreeMap<String, ArrayList<String>> rhymeWords = new TreeMap<>();
+		rhymeWords.put("nn", new ArrayList<String>());
+		rhymeWords.put("vb", new ArrayList<String>());
+		rhymeWords.put("vbz", new ArrayList<String>());
+		rhymeWords.put("vbd", new ArrayList<String>());
+		rhymeWords.put("rb", new ArrayList<String>());
+		
+		while (rhymeWords.get("nn").size() <= length || rhymeWords.get("vb").size() <= length || rhymeWords.get("vbz").size() <= length ||
+				rhymeWords.get("vbd").size() <= length || rhymeWords.get("rb").size() <= length) {
+			for (String pos : rhymeWords.keySet()) {
+				String rhymeWord = RiTa.randomWord(pos);
+				String[] rhymeList = RiTa.rhymes(rhymeWord);
+				if (rhymeList.length != 0) {
+					rhymeWords.get(pos).add(rhymeWord);
+				}
+				
+				for (int i=0; i<rhymeList.length; i++) {
+					//System.out.println(i);
+					String rwPos = RiTa.getPosTags(rhymeList[i])[0];
+					if (rhymeWords.get(rwPos)!=null) {	
+						if (rhymeWords.get(rwPos).size() <= length) {
+							rhymeWords.get(rwPos).add(rhymeList[i]);
+						}
+					}
+				}
+			}
+		}
+		return rhymeWords;
+	}
 }
+
+

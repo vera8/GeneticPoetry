@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Mutation {
 	//number of different mutation methods
-	private static int mNum = 2;
+	private static int mNum = 3;
 	
 	public static void mutate(double mutationRate, Poem poem) {
 		double p = ThreadLocalRandom.current().nextDouble();
@@ -13,6 +13,11 @@ public class Mutation {
 				singleWordMutation(poem);
 			} else if(m==1) {
 				multipleWordMutation(poem);
+			} else if(m==3) {
+				if (poem.getRhymeFitness() == 1.0) {
+					return;
+				}
+				endWordMutation(poem);
 			}
 		}	
 	}
@@ -45,6 +50,13 @@ public class Mutation {
 		
 		int subtreeIndex = ThreadLocalRandom.current().nextInt(1, nodes.size());
 		nodes.get(subtreeIndex).replacePos();
+	}
+	
+	//mutates the last word of a line
+	public static void endWordMutation(Poem poem) {
+		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
+		ArrayList<TreeNode> chosenLine = poem.getPoemTree()[lineIndex].getPreorderArray();
+		chosenLine.get(chosenLine.size()-1).replacePos();
 	}
 	
 	//randomly change one subtree into another randomly creates subtree that fits the same category

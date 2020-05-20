@@ -24,8 +24,12 @@ public class LeafNode extends TreeNode {
 	
 	@Override
 	public void replacePos() {
-		
-		this.word = RiTa.randomWord(this.category);
+		try {
+			this.word = RiTa.randomWord(this.category);
+		} catch (rita.RiTaException re) {
+			this.word = this.category;
+			this.category = RiTa.getPosTags(this.word)[0];
+		}
 		
 	}
 	
