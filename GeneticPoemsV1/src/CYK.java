@@ -16,7 +16,7 @@ public class CYK {
 		}
 		
 		ArrayList<String[]> termRules = new ArrayList<String[]>();
-		
+
 		for (String[] rule : grammar) {
 			for (int i=1; i<rule.length; i++) {
 				//check if lowercase
@@ -149,7 +149,8 @@ public class CYK {
 		if (p[n-1][0][0] != null) {
 			return new Tree(p[n-1][0][0]);
 		} else {
-		return null;
+			System.out.println("parsing failed");
+			return null;
 		}
 	}
 }

@@ -16,7 +16,7 @@ public class GeneticAlgorithm {
 	private static int popSize = 1000;
 	private static int maxGenNum = 50;
 	private static int poemsSize = 4;
-	private static double mutationRate = 0.001;
+	private static double mutationRate = 0.005;
 	private static double crossoverRate = 0.95;
 	private static int tournamentSize = 2;
 	private static int eliteSize = (int) (popSize * 0.005);
@@ -31,7 +31,7 @@ public class GeneticAlgorithm {
 			try {
 				graph.createGraph(fitnessData, "Generational Fitness: pop size: " + popSize + "; gen num: "+ maxGenNum + 
 						"; mutation rate: " + mutationRate + "; crossover rate: " + crossoverRate + "; elite size: " + eliteSize, 
-						"generation number", "fitness", true, "fg");
+						"generation number", "fitness", false, "fg");
 				
 				graph.createGraph(poemVarianceC, ("Poem Variance: pop size: " + popSize + " ; gen num: " + maxGenNum +
 						"; mutation rate: " + mutationRate + "; crossover rate: " + crossoverRate + "; elite size: " + eliteSize), 
@@ -63,14 +63,18 @@ public class GeneticAlgorithm {
 		
 		Poem fittest = pop.getFittest();
 		System.out.println("fittest: " + fittest.getFitness());
-		System.out.println(fittest);
+		System.out.println(fittest.printWithStresses());
 		System.out.println(genNum + ": " + pop.getAvrgFitness());
 
 		XYSeries averageFitness = new XYSeries("average fitness");
 		XYSeries fittestIndividual = new XYSeries("fittest individual");
+		XYSeries averageMetricFitness = new XYSeries("average metric fitness");
+		XYSeries averageRhymeFitness = new XYSeries("average rhyme fitness");
 		XYSeries poemVariance = new XYSeries("poem varaince");
 		averageFitness.add(genNum, pop.getAvrgFitness());
 		fittestIndividual.add(genNum, fittest.getFitness());
+		averageMetricFitness.add(genNum, pop.calculateAverageMetricFitness());
+		averageRhymeFitness.add(genNum, pop.calculateAverageRhymeFitness());
 		poemVariance.add(genNum, pop.calculateFitnessVariance());
 		
 		for (genNum=1; genNum<maxGenNum; genNum++) {			
@@ -113,20 +117,29 @@ public class GeneticAlgorithm {
 					"; variance: " + pop.calculateFitnessVariance() + 
 					"; PV: " + pop.calculatePoemVariance()*/);
 			
+			//lower mutation rate to help convergence
+			if(mutationRate>0.0) {
+				mutationRate-=(mutationRate/((double)maxGenNum * 0.5));
+			}
+			
 			//add data for the diagrams
 			averageFitness.add(genNum, pop.getAvrgFitness());
 			fittest = pop.getFittest();
 			fittestIndividual.add(genNum, fittest.getFitness());
+			averageMetricFitness.add(genNum, pop.calculateAverageMetricFitness());
+			averageRhymeFitness.add(genNum, pop.calculateAverageRhymeFitness());
 			poemVariance.add(genNum, pop.calculateFitnessVariance());
 		}
 		fittest = pop.getFittest();
 		System.out.println("fittest: " + fittest.getFitness());
-		System.out.println(fittest);
+		System.out.println(fittest.printWithStresses());
 		System.out.println(pop.getIndividuals()[23]);
 		System.out.println(pop.getIndividuals()[12]);
 		fitnessData = new XYSeriesCollection();
 		fitnessData.addSeries(averageFitness);
 		fitnessData.addSeries(fittestIndividual);
+		fitnessData.addSeries(averageMetricFitness);
+		fitnessData.addSeries(averageRhymeFitness);
 		
 		poemVarianceC = new XYSeriesCollection();
 		poemVarianceC.addSeries(poemVariance);

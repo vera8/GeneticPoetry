@@ -40,7 +40,7 @@ public class Recombination {
 		double p = 1.0/poemLength;
 		//int crossoverPointsNum = ThreadLocalRandom.current().nextInt(1, poemLength+1);
 		for (int i=0; i<poemLength; i++) {
-			if (/*p>=ThreadLocalRandom.current().nextDouble()*/ true) {
+			if (p>=ThreadLocalRandom.current().nextDouble()) {
 				Tree currentLineP1 = poem1.getPoemTree()[i];
 				Tree currentLineP2 = poem2.getPoemTree()[i];
 				if (currentLineP1.toSentence().equals(currentLineP2.toSentence())) {

@@ -56,6 +56,24 @@ public class Population {
 		this.avrgFitness = fitness/(double) size;
 	}
 	
+	public double calculateAverageMetricFitness() {
+		double fitness = 0;
+		for (int i=0; i<size; i++) {
+			fitness += individuals[i].getMetricFitness();
+		}
+		fitness = fitness/(double) size;
+		return fitness;
+	}
+	
+	public double calculateAverageRhymeFitness() {
+		double fitness = 0;
+		for (int i=0; i<size; i++) {
+			fitness += individuals[i].getRhymeFitness();
+		}
+		fitness = fitness/(double) size;
+		return fitness;
+	}
+	
 	public Poem getFittest() {
 		Poem fittest = individuals[0];
 		for (int i=1; i<size; i++) {
