@@ -5,6 +5,7 @@ public class Population {
 	private int size;
 	private Poem[] individuals;
 	private double avrgFitness = -1;
+	String[][] grammar; 
 
 	public Population(int size) {
 		this.size = size;
@@ -16,6 +17,7 @@ public class Population {
 		for (int i=0; i<size; i++) {
 			individuals[i] = generator.generatePoem(lines);
 		}
+		this.grammar = generator.getGrammar();
 	}
 	
 	public void addIndividual(int index, Poem individual) {
@@ -126,5 +128,9 @@ public class Population {
 			}
 		}
 		return differenceCount;
+	}
+	
+	public String[][] getGrammar(){
+		return this.grammar;
 	}
 }

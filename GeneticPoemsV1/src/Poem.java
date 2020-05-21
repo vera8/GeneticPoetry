@@ -1,7 +1,7 @@
 import rita.RiTa;
 
 public class Poem {
-	private Tree[] poemTree;
+	private Tree[] poemTrees;
 	//speichern als string und als baum könnte zu problemen bei rekombination führen 
 	//-> nach jeder rekombination muss unbedingt der String geupdated werden
 	//private String[] poemString;
@@ -11,7 +11,7 @@ public class Poem {
 	private double[] fitnessPerLine;
 	
 	public Poem(Tree[] poemTree) {
-		this.poemTree = poemTree;
+		this.poemTrees = poemTree;
 
 		//this.fitnessPerLine = new double[length()];
 		
@@ -23,9 +23,9 @@ public class Poem {
 	
 	//copy constructor
 	public Poem(Poem poem) {
-		this.poemTree = new Tree[poem.length()];
+		this.poemTrees = new Tree[poem.length()];
 		for (int i=0; i<poem.length(); i++) {
-				this.poemTree[i] = new Tree(poem.poemTree[i]);
+				this.poemTrees[i] = new Tree(poem.poemTrees[i]);
 		}
 		this.fitness = poem.fitness;
 		this.fitnessPerLine = poem.fitnessPerLine;
@@ -39,9 +39,9 @@ public class Poem {
 		return toString;
 	}
 	
-	public String printPoemTree() {
+	public String printPoemTrees() {
 		String treeString = "";
-		for (Tree line : poemTree) {
+		for (Tree line : poemTrees) {
 			treeString += line + "\n";
 		}
 		return treeString;
@@ -49,19 +49,19 @@ public class Poem {
 	
 	
 	public String[] getPoemString() {
-		String[] poemString = new String[poemTree.length];
+		String[] poemString = new String[poemTrees.length];
 		for (int i=0; i<poemString.length; i++) {
-			poemString[i] = poemTree[i].toSentence();
+			poemString[i] = poemTrees[i].toSentence();
 		}
 		return poemString;
 	}
 	
 	public void changeLine(int index, Tree line) {
-		poemTree[index] = line;
+		poemTrees[index] = line;
 	}
 	
-	public Tree[] getPoemTree() {
-		return poemTree;
+	public Tree[] getPoemTrees() {
+		return poemTrees;
 	}
 	
 	public void setFitness(double fitness) {
@@ -73,7 +73,7 @@ public class Poem {
 	}
 	
 	public int length() {
-		return poemTree.length;
+		return poemTrees.length;
 	}
 
 	public double[] getFitnessPerLine() {

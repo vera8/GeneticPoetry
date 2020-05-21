@@ -1,5 +1,9 @@
 import java.util.concurrent.ThreadLocalRandom;
+
+import rita.RiTa;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Mutation {
 	//number of different mutation methods
@@ -13,7 +17,7 @@ public class Mutation {
 				singleWordMutation(poem);
 			} else if(m==1) {
 				multipleWordMutation(poem);
-			} else if(m==3) {
+			} else if(m==2) {
 				if (poem.getRhymeFitness() == 1.0) {
 					return;
 				}
@@ -26,7 +30,7 @@ public class Mutation {
 	//take full poem as parameter or rather just one line??
 	public static void singleWordMutation(Poem poem) {
 		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
-		ArrayList<TreeNode> chosenLine = poem.getPoemTree()[lineIndex].getPreorderArray();
+		ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[lineIndex].getPreorderArray();
 		ArrayList<LeafNode> wordNodes = new ArrayList<LeafNode>();
 		for (int i=0; i<chosenLine.size(); i++) {
 			if(chosenLine.get(i).getRightChild() == null) {
@@ -40,7 +44,7 @@ public class Mutation {
 	//mutates multiple words most of the time
 	public static void multipleWordMutation(Poem poem) {
 		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
-		ArrayList<TreeNode> chosenLine = poem.getPoemTree()[lineIndex].getPreorderArray();
+		ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[lineIndex].getPreorderArray();
 		ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
 		for (int i=0; i<chosenLine.size(); i++) {
 			if(chosenLine.get(i).getRightChild() != null) {
@@ -54,9 +58,18 @@ public class Mutation {
 	
 	//mutates the last word of a line
 	public static void endWordMutation(Poem poem) {
-		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
-		ArrayList<TreeNode> chosenLine = poem.getPoemTree()[lineIndex].getPreorderArray();
-		chosenLine.get(chosenLine.size()-1).replacePos();
+		HashMap<String, ArrayList<String>> rhymeWords = RandomPoemGenerator.rhymeWords;
+		for (int i=0; i<poem.length(); i++) {
+			double p = ThreadLocalRandom.current().nextDouble();
+			if (p<0.5) {				
+				ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[i].getPreorderArray();
+				LeafNode leafNode = (LeafNode) chosenLine.get(chosenLine.size()-1).getLeftChild();
+				String targetPos = leafNode.getCategory();
+				int wordIndex = ThreadLocalRandom.current().nextInt(0, rhymeWords.get(targetPos).size());
+				String newWord = rhymeWords.get(targetPos).get(wordIndex);
+				leafNode.setWord(newWord);
+			}
+		}
 	}
 	
 	//randomly change one subtree into another randomly creates subtree that fits the same category
