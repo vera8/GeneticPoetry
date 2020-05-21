@@ -30,6 +30,7 @@ public class RandomPoemGenerator
 			{"RB", "rb"},
 			//{"RB", "gladly", "badly", "sadly", "slowly", "wisely", "precisely", "widely"}
 	};
+	public static HashMap<String, ArrayList<String>> rhymeWords;
 	
 	public RandomPoemGenerator() {
 		createRiGrammar();
@@ -84,12 +85,12 @@ public class RandomPoemGenerator
 	}
 	
 	private void addRhymesToGrammar() {
-		HashMap<String, ArrayList<String>> rhymeWordList = writeRhymeWordList(1000);
+		this.rhymeWords = writeRhymeWordList(1000);
 		for (int i=0; i<grammar.length; i++) {
 			String pos = grammar[i][0].toLowerCase();
-			if (rhymeWordList.containsKey(pos)) {
-				String[] rhymeWordArray = new String[rhymeWordList.get(pos).size()];
-				rhymeWordArray = rhymeWordList.get(pos).toArray(rhymeWordArray);
+			if (rhymeWords.containsKey(pos)) {
+				String[] rhymeWordArray = new String[rhymeWords.get(pos).size()];
+				rhymeWordArray = rhymeWords.get(pos).toArray(rhymeWordArray);
 				String[] ruleArray = new String[rhymeWordArray.length+1];
 				ruleArray[0] = pos.toUpperCase();
 				System.arraycopy(rhymeWordArray, 0, ruleArray, 1, rhymeWordArray.length);

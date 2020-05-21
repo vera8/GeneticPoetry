@@ -17,7 +17,7 @@ public class GeneticAlgorithm {
 	private static int popSize = 1000;
 	private static int maxGenNum = 50;
 	private static int poemsSize = 4;
-	private static double mutationRate = 0.005;
+	private static double initialMutationRate = 0.005;
 	private static double crossoverRate = 0.95;
 	private static int tournamentSize = 2;
 	private static int eliteSize = (int) (popSize * 0.005);
@@ -27,7 +27,6 @@ public class GeneticAlgorithm {
 	private static Poem bestPoem;
 	
 	public static void main(String[] args) {
-		double initialMRate = mutationRate;
 		int runs = 5;
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
@@ -42,7 +41,7 @@ public class GeneticAlgorithm {
 		for (int i=0; i<runs; i++) {
 			geneticAlgorithm(true, averageValues);
 		}
-		System.out.println("Best Poem after " + runs + " runs:");
+		System.out.println("Best Poem after " + runs + " runs (fitness:" + bestPoem.getFitness() + "):");
 		System.out.println(bestPoem);
 		
 		XYSeries averageFitness = new XYSeries("average fitness");
@@ -70,7 +69,7 @@ public class GeneticAlgorithm {
 			var graph = new Graph(1);
 			try {
 				graph.createGraph(fitnessData, "Generational Fitness: pop size: " + popSize + "; gen num: "+ maxGenNum + 
-						"; mutation rate: " + initialMRate + "; crossover rate: " + crossoverRate + "; elite size: " + eliteSize, 
+						"; mutation rate: " + initialMutationRate + "; crossover rate: " + crossoverRate + "; elite size: " + eliteSize, 
 						"generation number", "fitness", false, "fg");
 				
 //				graph.createGraph(poemVarianceC, ("Poem Variance: pop size: " + popSize + " ; gen num: " + maxGenNum +
@@ -90,6 +89,7 @@ public class GeneticAlgorithm {
 		if(!elitism) {
 			eliteSize = 0;
 		}
+		double mutationRate = initialMutationRate;
 		int genNum = 0;
 		Population pop = new Population(popSize);
 		pop.initialzePopulation(poemsSize);
@@ -101,7 +101,9 @@ public class GeneticAlgorithm {
 		pop.calculateAverageFitness();
 		
 		Poem fittest = pop.getFittest();
-		bestPoem = fittest;
+		if (bestPoem == null) {
+			bestPoem = fittest;
+		}
 		System.out.println("fittest: " + fittest.getFitness());
 		System.out.println(fittest.printWithStresses());
 		System.out.println(genNum + ": " + pop.getAvrgFitness());

@@ -99,7 +99,7 @@ public class TestMain {
 		
 		
 
-		for (TreeNode treenode : firstPoem.getPoemTree()[0].preorderArray) {
+		for (TreeNode treenode : firstPoem.getPoemTrees()[0].preorderArray) {
 			//System.out.print(treenode.getCategory() + " ");
 		}
 		System.out.println();
@@ -125,22 +125,26 @@ public class TestMain {
 //		FitnessCalculator.calculateFitness(firstPoem);
 //		System.out.println("fitness:" + firstPoem.getFitness());
 		
-		for (int i=0; i<poemGenerator.getGrammar().length; i++) {
-			for (int j=0; j<poemGenerator.getGrammar()[i].length; j++) {
-				System.out.print(poemGenerator.getGrammar()[i][j] + ", ");
-				
-			}
-			System.out.println();
-		}
+//		for (int i=0; i<poemGenerator.getGrammar().length; i++) {
+//			for (int j=0; j<poemGenerator.getGrammar()[i].length; j++) {
+//				System.out.print(poemGenerator.getGrammar()[i][j] + ", ");
+//				
+//			}
+//			System.out.println();
+//		}
 		
 		System.out.println(FitnessCalculator.isRhyme("must", "sadist"));
 		System.out.println(FitnessCalculator.isRhyme("charitably ", "warningly"));
 		System.out.println(RiTa.getPhonemes("shows") + " : " + RiTa.getPhonemes("snows"));
 				
-		TreeMap<String, ArrayList<String>> rhymeList = writeRhymeWordList(100);
-		for (String pos : rhymeList.keySet()) {
-			System.out.println(pos + ": " + rhymeList.get(pos));
-		}
+//		TreeMap<String, ArrayList<String>> rhymeList = writeRhymeWordList(100);
+//		for (String pos : rhymeList.keySet()) {
+//			System.out.println(pos + ": " + rhymeList.get(pos));
+//		}
+		
+		System.out.println(firstPoem);
+		Mutation.endWordMutation(firstPoem);
+		System.out.println(firstPoem);
 
 	}
 	
