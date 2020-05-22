@@ -6,7 +6,7 @@ import java.util.TreeMap;
 public class TestMain {
 
 	public static void main(String[] args) {
-		RandomPoemGenerator poemGenerator = new RandomPoemGenerator();
+		RandomPoemGenerator poemGenerator = new RandomPoemGenerator(false);
 		Poem firstPoem = poemGenerator.generatePoem(4);
 		Poem secondPoem = poemGenerator.generatePoem(4);
 //		String[][] poems = new String[100][];
@@ -142,10 +142,17 @@ public class TestMain {
 //			System.out.println(pos + ": " + rhymeList.get(pos));
 //		}
 		
-		System.out.println(firstPoem);
-		Mutation.endWordMutation(firstPoem);
-		System.out.println(firstPoem);
-
+		System.out.println(firstPoem.printWithStresses());
+		double[] fitness = FitnessCalculator.calculateMetricFitness(firstPoem);
+		for(int i=0; i<fitness.length; i++) {
+			System.out.println(fitness[i]);
+		}
+		
+		System.out.println();
+//		"their folk snipes"
+//		"these folk can scorch"
+		System.out.println(RiTa.getSyllables("override"));
+		System.out.println(RiTa.getSyllables("capitulate"));
 	}
 	
 	public static TreeMap<String, ArrayList<String>> writeRhymeWordList(int length) {

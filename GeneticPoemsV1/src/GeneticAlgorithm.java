@@ -27,7 +27,7 @@ public class GeneticAlgorithm {
 	private static Poem bestPoem;
 	
 	public static void main(String[] args) {
-		int runs = 5;
+		int runs = 1;
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
 		averageValues.put("fittest", new double[maxGenNum]);

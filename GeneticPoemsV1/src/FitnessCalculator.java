@@ -49,24 +49,53 @@ public class FitnessCalculator {
 		poem.setFitnessPerLine(fitnessPerLine);
 	}
 
-	private static double[] calculateMetricFitness(Poem poem) {
+	public static double[] calculateMetricFitness(Poem poem) {
 		double distance = 0.0;
 		double maxDistance = 0.0;
 		double[] fitnessPerLine = new double[poem.length()];
 		for (int i=0; i<poem.length(); i++) {
 			String line = poem.getPoemString()[i];
+			String[] tokenizedLine = RiTa.tokenize(line, " ");
 			String stresses = RiTa.getStresses(line);
-			stresses = stresses.replace("[", "").replace("]", "").replace("/", "").replace(" ", "");
+			String[] tokenizedStressed = RiTa.tokenize(stresses, " ");
+			//stresses = stresses.replace("[", "").replace("]", "").replace("/", "").replace(" ", "");
+			stresses = stresses.replace("[", " ").replace("]", " ");
+			stresses = " " + stresses + " ";
 			
-			maxDistance += stresses.length();
-			int syllableNum = stresses.length();
-			String schemeTmp = metre.substring(0, syllableNum);
-			fitnessPerLine[i] = 1.0 - RiTa.minEditDistance(schemeTmp, stresses, true);
-//			System.out.println(schemeTmp);
-//			System.out.println(stresses);
-//			System.out.println(RiTa.minEditDistance(schemeTmp, stresses, true));
-			distance += RiTa.minEditDistance(schemeTmp, stresses);
-			//System.out.println(distance);
+			int fitnessPoints = 0;
+			int s = 0;
+			int w = 0;
+			for (int j=1; j<stresses.length(); j++) {
+				if (stresses.charAt(j)==('/')) { continue; }
+				if (stresses.charAt(j)==' ') {
+					w++;
+					continue;
+				}
+				
+				if (stresses.charAt(j-1)==' ' && stresses.charAt(j+1)==' ') {
+					String pos = RiTa.getPosTags(tokenizedLine[w])[0];
+					if (pos.equals("dt") || pos.equals("prp$") || pos.equals("md") || pos.equals("in")){
+						fitnessPoints++;	
+					} else {
+						if (stresses.charAt(j) == metre.charAt(s)) {
+							fitnessPoints++;
+						}
+					}
+				} else {
+					if (stresses.charAt(j) == metre.charAt(s)) {
+						fitnessPoints++;
+					}
+				}
+				s++;
+			}
+			
+//			maxDistance += stresses.length();
+//			int syllableNum = stresses.length();
+//			String schemeTmp = metre.substring(0, syllableNum);
+//			fitnessPerLine[i] = 1.0 - RiTa.minEditDistance(schemeTmp, stresses, true);
+//			distance += RiTa.minEditDistance(schemeTmp, stresses);
+			
+			fitnessPerLine[i] = (double)fitnessPoints / (double) s;
 		}
 
 		double normalizedDistance = distance/maxDistance;
