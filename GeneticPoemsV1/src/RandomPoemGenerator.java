@@ -18,28 +18,28 @@ public class RandomPoemGenerator
 			{"PP", "IN NP"},
 			{"DET", "dt"},
 			{"NN", "nn"},
-			//{"NN", "nn", "snow", "state", "slate", "plate", "hand", "band", "sand"},
 			{"PRP$", "prp$"},
 			{"VBD", "vbd"},
 			{"VBZ", "vbz"},
-			//{"VBZ", "tries", "wakes", "takes", "makes", "goes", "shows", "snows", "flows", "glows", "grows"},
 			{"VBB", "vb"},
-			//{"VBB", "stand", "land", "know", "show", "go", "flow", "snow", "grow", "hate", "wait"},
 			{"MD", "md"},
 			{"IN", "in"},
 			{"RB", "rb"},
-			//{"RB", "gladly", "badly", "sadly", "slowly", "wisely", "precisely", "widely"}
 	};
 	public static HashMap<String, ArrayList<String>> rhymeWords;
 	
-	public RandomPoemGenerator() {
-		createRiGrammar();
+	//constructor; boolean parameter to set whether or not rhyme words should be added to the grammar
+	public RandomPoemGenerator(boolean addRhymes) {
+		createRiGrammar(addRhymes);
 		file = "C:\\Users\\Vera\\Documents\\Uni\\Bachelorarbeit\\Algorithm\\GeneticPoemsV1\\src\\grammar_files\\grammar1.json";
 	}
 	
-	private void createRiGrammar() {
+	private void createRiGrammar(boolean addRhymes) {
 		cfg = new RiGrammar();
-		addRhymesToGrammar();
+		if (addRhymes)
+		{
+			addRhymesToGrammar();
+		}
 		cfg.addRule("<start>", "S");
 		for (int i=0; i<grammar.length; i++) {
 			for (int j=1; j<grammar[i].length; j++) {
