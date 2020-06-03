@@ -9,6 +9,7 @@ public class TestMain {
 		RandomPoemGenerator poemGenerator = new RandomPoemGenerator(false);
 		Poem firstPoem = poemGenerator.generatePoem(4);
 		Poem secondPoem = poemGenerator.generatePoem(4);
+		FitnessCalculator fitnessCalculator = new FitnessCalculator();
 //		String[][] poems = new String[100][];
 		
 //		for (int i=0; i<100; i++) {
@@ -80,7 +81,7 @@ public class TestMain {
 //			System.out.println(fitnessPL[i]);
 //		}
 		System.out.println(firstPoem);
-		FitnessCalculator.calculateFitness(firstPoem);
+		fitnessCalculator.calculateFitness(firstPoem);
 		System.out.println(firstPoem.getFitness());
 		System.out.println(secondPoem);
 //		Poem[] crossedover = Recombination.lineCrossover(firstPoem, secondPoem);
@@ -133,8 +134,8 @@ public class TestMain {
 //			System.out.println();
 //		}
 		
-		System.out.println(FitnessCalculator.isRhyme("must", "sadist"));
-		System.out.println(FitnessCalculator.isRhyme("charitably ", "warningly"));
+		System.out.println(fitnessCalculator.isRhyme("must", "sadist"));
+		System.out.println(fitnessCalculator.isRhyme("charitably ", "warningly"));
 		System.out.println(RiTa.getPhonemes("shows") + " : " + RiTa.getPhonemes("snows"));
 				
 //		TreeMap<String, ArrayList<String>> rhymeList = writeRhymeWordList(100);
@@ -143,7 +144,7 @@ public class TestMain {
 //		}
 		
 		System.out.println(firstPoem.printWithStresses());
-		double[] fitness = FitnessCalculator.calculateMetricFitness(firstPoem);
+		double[] fitness = fitnessCalculator.calculateMetricFitness(firstPoem);
 		for(int i=0; i<fitness.length; i++) {
 			System.out.println(fitness[i]);
 		}
@@ -153,6 +154,10 @@ public class TestMain {
 //		"these folk can scorch"
 		System.out.println(RiTa.getSyllables("override"));
 		System.out.println(RiTa.getSyllables("capitulate"));
+		
+		System.out.println("Emotion Fitness: " + fitnessCalculator.calculateEmotionFitness(firstPoem));
+		System.out.println("Emotion Fitness: " + fitnessCalculator.calculateEmotionFitness(secondPoem));
+		
 	}
 	
 	public static TreeMap<String, ArrayList<String>> writeRhymeWordList(int length) {

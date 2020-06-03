@@ -80,7 +80,7 @@ public class Graph extends JFrame {
 		
 		XYPlot plot = graph.getXYPlot();
 		var renderer = new XYLineAndShapeRenderer();
-		Color[] colors = { Color.ORANGE, Color.BLUE, Color.RED, Color.CYAN, Color.GREEN };
+		Color[] colors = { Color.ORANGE, Color.BLUE, Color.RED, Color.CYAN, Color.GREEN, Color.PINK };
 		for (int i=0; i> dataset.getSeriesCount(); i++) {
 			if (i>=colors.length) {
 				break;

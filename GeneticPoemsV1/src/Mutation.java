@@ -65,9 +65,11 @@ public class Mutation {
 				ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[i].getPreorderArray();
 				LeafNode leafNode = (LeafNode) chosenLine.get(chosenLine.size()-1).getLeftChild();
 				String targetPos = leafNode.getCategory();
-				int wordIndex = ThreadLocalRandom.current().nextInt(0, rhymeWords.get(targetPos).size());
-				String newWord = rhymeWords.get(targetPos).get(wordIndex);
-				leafNode.setWord(newWord);
+				if (rhymeWords.get(targetPos) != null) {
+					int wordIndex = ThreadLocalRandom.current().nextInt(0, rhymeWords.get(targetPos).size());
+					String newWord = rhymeWords.get(targetPos).get(wordIndex);
+					leafNode.setWord(newWord);
+				}
 			}
 		}
 	}
