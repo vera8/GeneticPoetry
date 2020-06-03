@@ -7,6 +7,7 @@ public class Poem {
 	//private String[] poemString;
 	private double metricFitness =-1;
 	private double rhymeFitness = -1;
+	private double emotionFitness = -1;
 	private double fitness = -1;
 	private double[] fitnessPerLine;
 	
@@ -100,6 +101,14 @@ public class Poem {
 		return rhymeFitness;
 	}
 	
+	public double getEmotionFitness() {
+		return emotionFitness;
+	}
+	
+	public void setEmotionFitness(double emotionFitness) {
+		this.emotionFitness = emotionFitness;
+	}
+	
 	public String printWithStresses() {
 		String toString = "";
 		for (String line : getPoemString()) {
@@ -107,5 +116,4 @@ public class Poem {
 		}
 		return toString;
 	}
-
 }

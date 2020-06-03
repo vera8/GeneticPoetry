@@ -85,7 +85,7 @@ public class RandomPoemGenerator
 	}
 	
 	private void addRhymesToGrammar() {
-		this.rhymeWords = writeRhymeWordList(1000);
+		this.rhymeWords = writeRhymeWordList(2000);
 		for (int i=0; i<grammar.length; i++) {
 			String pos = grammar[i][0].toLowerCase();
 			if (rhymeWords.containsKey(pos)) {

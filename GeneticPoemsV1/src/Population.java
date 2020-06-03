@@ -76,6 +76,15 @@ public class Population {
 		return fitness;
 	}
 	
+	public double calculateAverageEmotionFitness() {
+		double fitness = 0;
+		for (int i=0; i<size; i++) {
+			fitness += individuals[i].getEmotionFitness();
+		}
+		fitness = fitness/(double) size;
+		return fitness;
+	}
+	
 	public Poem getFittest() {
 		Poem fittest = individuals[0];
 		for (int i=1; i<size; i++) {

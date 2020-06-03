@@ -23,16 +23,19 @@ public class GeneticAlgorithm {
 	private static int eliteSize = (int) (popSize * 0.005);
 	private static XYSeriesCollection fitnessData;
 	private static XYSeriesCollection poemVarianceC;
+	private static FitnessCalculator fitnessCalculator;
 	
 	private static Poem bestPoem;
 	
 	public static void main(String[] args) {
+		fitnessCalculator = new FitnessCalculator();
 		int runs = 1;
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
 		averageValues.put("fittest", new double[maxGenNum]);
 		averageValues.put("popFitnessMetric", new double[maxGenNum]);
 		averageValues.put("popFitnessRhyme", new double[maxGenNum]);
+		averageValues.put("popFitnessEmotion", new double[maxGenNum]);
 		
 		for (String data : averageValues.keySet()) {
 			Arrays.fill(averageValues.get(data), 0);
@@ -41,13 +44,15 @@ public class GeneticAlgorithm {
 		for (int i=0; i<runs; i++) {
 			geneticAlgorithm(true, averageValues);
 		}
-		System.out.println("Best Poem after " + runs + " runs (fitness:" + bestPoem.getFitness() + "):");
+		System.out.println("Best Poem after " + runs + " runs (fitness:" + bestPoem.getFitness() + ", metric: "+ bestPoem.getMetricFitness()+
+				", rhyme: " + bestPoem.getRhymeFitness() + ", emotion: " + bestPoem.getEmotionFitness() + "):");
 		System.out.println(bestPoem);
 		
 		XYSeries averageFitness = new XYSeries("average fitness");
 		XYSeries fittestIndividual = new XYSeries("fittest individual");
 		XYSeries averageMetricFitness = new XYSeries("average metric fitness");
 		XYSeries averageRhymeFitness = new XYSeries("average rhyme fitness");
+		XYSeries averageEmotionFitness = new XYSeries("average emotion fitness");
 		for (int i=0; i<maxGenNum; i++) {
 			averageValues.get("popFitness")[i] = averageValues.get("popFitness")[i]/runs;	
 			averageFitness.add(i, averageValues.get("popFitness")[i]);
@@ -57,6 +62,8 @@ public class GeneticAlgorithm {
 			averageMetricFitness.add(i, averageValues.get("popFitnessMetric")[i]);
 			averageValues.get("popFitnessRhyme")[i] = averageValues.get("popFitnessRhyme")[i]/runs;	
 			averageRhymeFitness.add(i, averageValues.get("popFitnessRhyme")[i]);
+			averageValues.get("popFitnessEmotion")[i] = averageValues.get("popFitnessEmotion")[i]/runs;	
+			averageEmotionFitness.add(i, averageValues.get("popFitnessEmotion")[i]);
 	
 		}
 		fitnessData = new XYSeriesCollection();
@@ -64,6 +71,7 @@ public class GeneticAlgorithm {
 		fitnessData.addSeries(fittestIndividual);
 		fitnessData.addSeries(averageMetricFitness);
 		fitnessData.addSeries(averageRhymeFitness);
+		fitnessData.addSeries(averageEmotionFitness);
 		
 		EventQueue.invokeLater(() -> {
 			var graph = new Graph(1);
@@ -96,7 +104,7 @@ public class GeneticAlgorithm {
 		
 		//calculate fitness
 		for (int i=0; i<popSize; i++) {
-			FitnessCalculator.calculateFitness(pop.getIndividuals()[i]);
+			fitnessCalculator.calculateFitness(pop.getIndividuals()[i]);
 		}
 		pop.calculateAverageFitness();
 		
@@ -110,12 +118,14 @@ public class GeneticAlgorithm {
 
 		double avrgMetricFitness = pop.calculateAverageMetricFitness();
 		double avrgRhymeFitness = pop.calculateAverageRhymeFitness();
+		double avrgEmotionFitness = pop.calculateAverageEmotionFitness();
 		
 		//fill HashMap for average values
 		savedValues.get("popFitness")[genNum] += pop.getAvrgFitness();
 		savedValues.get("fittest")[genNum] += fittest.getFitness();
 		savedValues.get("popFitnessMetric")[genNum] += avrgMetricFitness;
 		savedValues.get("popFitnessRhyme")[genNum] += avrgRhymeFitness;
+		savedValues.get("popFitnessEmotion")[genNum] += avrgEmotionFitness;
 		
 		for (genNum=1; genNum<maxGenNum; genNum++) {			
 		
@@ -150,12 +160,10 @@ public class GeneticAlgorithm {
 			pop.setIndividuals(newGeneration);
 			
 			for (int j=0; j<popSize; j++) {
-				FitnessCalculator.calculateFitness(pop.getIndividuals()[j]);
+				fitnessCalculator.calculateFitness(pop.getIndividuals()[j]);
 			}
 			pop.calculateAverageFitness();
-			System.out.println(genNum + ": " + pop.getAvrgFitness() /*+ 
-					"; variance: " + pop.calculateFitnessVariance() + 
-					"; PV: " + pop.calculatePoemVariance()*/);
+			System.out.println(genNum + ": " + pop.getAvrgFitness());
 			
 			//lower mutation rate to help convergence
 			if(mutationRate>0.0) {
@@ -165,12 +173,14 @@ public class GeneticAlgorithm {
 			fittest = pop.getFittest();
 			avrgMetricFitness = pop.calculateAverageMetricFitness();
 			avrgRhymeFitness = pop.calculateAverageRhymeFitness();
+			avrgEmotionFitness = pop.calculateAverageEmotionFitness();
 			
 			//fill HashMap for average values
 			savedValues.get("popFitness")[genNum] += pop.getAvrgFitness();
 			savedValues.get("fittest")[genNum] += fittest.getFitness();
 			savedValues.get("popFitnessMetric")[genNum] += avrgMetricFitness;
 			savedValues.get("popFitnessRhyme")[genNum] += avrgRhymeFitness;
+			savedValues.get("popFitnessEmotion")[genNum] += avrgEmotionFitness;
 		}
 		fittest = pop.getFittest();
 		if (fittest.getFitness() > bestPoem.getFitness()) {

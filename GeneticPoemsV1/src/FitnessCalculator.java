@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import rita.*;
 
@@ -7,15 +8,32 @@ import rita.*;
 //(different metric scheme, emotion, long lines vs. short lines)
 
 public class FitnessCalculator {
-	public static String metre = "0101010101010101010101010101010101";
-	public static double metreWeight = 1.0;
+	private String metre = "0101010101010101010101010101010101";
+	private double metreWeight = 1.0;
+	private String emotion = "sadness";
+	private HashMap<String, String> opposites;
+	
+	private EmotionLexicon emotionLexicon;
 	
 	//add more criteria with weights over time; adjust weights by experimentation
 	//syllable count
 	//rhyme
 	//emotion (using Emotion Lexicon)
 	
-	public static void calculateFitness(Poem poem) {
+	public FitnessCalculator() {
+		this.emotionLexicon = new EmotionLexicon();
+		opposites = new HashMap<String, String>();
+		opposites.put("anger", "joy");
+		opposites.put("disgust", "joy");
+		opposites.put("fear", "joy");
+		opposites.put("joy", "sadness");
+		opposites.put("negative", "positive");
+		opposites.put("positive", "negative");
+		opposites.put("sadness", "joy");
+		opposites.put("trust", "disgust");
+	}
+	
+	public void calculateFitness(Poem poem) {
 		double fitness;
 		double[] fitnessPerLine;
 		
@@ -40,16 +58,19 @@ public class FitnessCalculator {
 		fitnessPerLine = metricFitnessPerLine;
 		
 		double rhymeFitness = calculateRhymeFitness(poem);
+		double emotionFitness = calculateEmotionFitness(poem);
 		
 		poem.setRhymeFitness(rhymeFitness);
+		poem.setEmotionFitness(emotionFitness);
 		
-		fitness = (averageMetricFitness + rhymeFitness)/2.0;
-		
+		//fitness = (0.4 * averageMetricFitness + 0.4 * rhymeFitness + 0.2 * emotionFitness)/*/3.0*/;
+		//fitness = (averageMetricFitness + rhymeFitness)/2.0;
+		fitness = (averageMetricFitness + rhymeFitness + emotionFitness)/3.0;
 		poem.setFitness(fitness);
 		poem.setFitnessPerLine(fitnessPerLine);
 	}
 
-	public static double[] calculateMetricFitness(Poem poem) {
+	public double[] calculateMetricFitness(Poem poem) {
 		double distance = 0.0;
 		double maxDistance = 0.0;
 		double[] fitnessPerLine = new double[poem.length()];
@@ -104,7 +125,7 @@ public class FitnessCalculator {
 		return fitnessPerLine;
 	}
 	
-	private static double calculateRhymeFitness(Poem poem) {
+	private double calculateRhymeFitness(Poem poem) {
 		int rhymePoints =0;
 		for (int i=1; i<poem.length(); i+=2) {
 			String[] line1 = RiTa.tokenize(poem.getPoemString()[i-1]);
@@ -152,11 +173,59 @@ public class FitnessCalculator {
 		return rhymeFitness;
 	}
 	
-	private double calculateAlliterationFitness(Poem poem) {
-		return 0.0;
+	public double calculateEmotionFitness(Poem poem) {
+		double maxEmotionPoints = poem.length() + (poem.length()/2);
+		double emotionPoints = 0;
+		double[] emotionPointsPerLine = new double[poem.length()];
+		for (int i=0; i<poem.length(); i++) {
+			String[] tokenizedLine = RiTa.tokenize(poem.getPoemString()[i]);
+			emotionPointsPerLine[i] = 0;
+			for (int j=0; j<tokenizedLine.length; j++) {
+				String word = tokenizedLine[j];
+				String wordPos = RiTa.getPosTags(word)[0];
+				
+				//only check emotion for "relevant" word types
+				if (wordPos != "dt" || wordPos != "prp$" || wordPos != "in") {
+					//get stem word for non-baseform verbs
+					if (wordPos.contentEquals("vbz") || wordPos.equals("vbd")){
+						word = RiTa.stem(word);
+					}
+					if (emotionLexicon.isEmotion(word, emotion)) {
+						emotionPointsPerLine[i]++;
+						emotionPoints++;
+					} else if (emotionLexicon.isEmotion(word, opposites.get(emotion))) {
+						if (emotionPoints > 0) {
+							emotionPointsPerLine[i]--;
+							emotionPoints--;
+						}
+					}
+				}
+			}
+		}
+		boolean emotionInEveryLine = true;
+		emotionPoints = 0;
+		for (int i=0; i<emotionPointsPerLine.length; i++) {
+			emotionPoints += emotionPointsPerLine[i];
+			if (emotionPointsPerLine[i] == 0) {
+				emotionInEveryLine = false;
+			}
+		}
+		double emotionFitness;
+		if(emotionPoints>=maxEmotionPoints) {
+			emotionFitness = 1.0;
+		} else {
+			emotionFitness = emotionPoints/maxEmotionPoints;
+		}
+		if (!emotionInEveryLine) {
+			if (emotionFitness > 0.5) {
+				emotionFitness -= 0.5;
+			}
+		}
+		
+		return emotionFitness;
 	}
 	
-	public static boolean isRhyme(String word1, String word2) {
+	public boolean isRhyme(String word1, String word2) {
 		if (word1.equals(word2)) {
 			return false;
 		}		
@@ -185,29 +254,6 @@ public class FitnessCalculator {
 			}
 		}
 		
-//		if(phonemesW1.length<phonemesW2.length && syllablesW1!=syllablesW2) {
-////			if(phonemesW1.length > 2) {
-//			if(syllablesW1 == 1) {
-//				j = phonemesW1.length;
-//			} else {
-//				j = phonemesW1.length-1;
-//			}
-//		} else if (phonemesW1.length>phonemesW2.length && syllablesW1!=syllablesW2) {
-////			if(phonemesW2.length > 2) {
-//			if(syllablesW2 == 1) {
-//				j = phonemesW2.length;
-//			} else {
-//				j = phonemesW2.length-1;
-//			}
-//		} else  /*if (phonemesW1.length==phonemesW2.length)*/{
-//			if(phonemesW1.length<=2) {
-//				j = phonemesW1.length-1;
-//			} else if(phonemesW1.length == phonemesW2.length){
-//				j = phonemesW1.length-2;
-//			} else {
-//				
-//			}
-//		}
 		for(int i=1; i<=subWord.length; i++) {
 			if(phonemesW1[phonemesW1.length-i]!=null && phonemesW2[phonemesW2.length-i]!=null) {
 				if(phonemesW1[phonemesW1.length-i].equals(phonemesW2[phonemesW2.length-i])) {
