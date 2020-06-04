@@ -12,16 +12,16 @@ public class RandomPoemGenerator
 	private RiGrammar cfg;
 	private String file;
 	private String[][] grammar = { 
-			{"S", "NP VP"},
+			{"S", "NP VP", "NP VBZ"},
 			{"NP", "DET NN", "PRP$ NN"}, 
-			{"VP", "vbz", "MD VBB", "VBZ RB", "VBD PP"},
+			{"VP", "MD VBB", "VBZ RB", "VBD PP"},
 			{"PP", "IN NP"},
 			{"DET", "dt"},
 			{"NN", "nn"},
 			{"PRP$", "prp$"},
+			{"VBB", "vb"},
 			{"VBD", "vbd"},
 			{"VBZ", "vbz"},
-			{"VBB", "vb"},
 			{"MD", "md"},
 			{"IN", "in"},
 			{"RB", "rb"},
@@ -71,17 +71,24 @@ public class RandomPoemGenerator
 		return poem;
 	}
 	
-	//does not work
-	public Tree expandGrammarFrom(String symbol) {
-		String[] sentencePart = RiTa.tokenize(cfg.expandFrom(symbol), " ");
-		for (int i=0; i<sentencePart.length; i++) {
-			sentencePart[i] = sentencePart[i].toLowerCase();
-		}
-		String[][] alteredGrammar = grammar;
-
-		Tree tree = CYK.parseTree(sentencePart, grammar);
+	
+	public Tree expandGrammarWith(String symbol) {
+		String part = cfg.expandFrom(symbol);
+		String sentence = cfg.expandWith(part, symbol);
+//		String[] sentencePart = RiTa.tokenize(cfg.expandFrom(symbol), " ");
+//		for (int i=0; i<sentencePart.length; i++) {
+//			sentencePart[i] = sentencePart[i].toLowerCase();
+//		}
+		//String[][] alteredGrammar = grammar;
+		String[] sentenceTkn = RiTa.tokenize(sentence, " ");
+		Tree tree = CYK.parseTree(sentenceTkn, grammar);
 		tree.replacePos();
-		return tree;
+		ArrayList<Tree> subtrees = tree.getSubtrees(symbol);
+		if (!subtrees.isEmpty()) {
+			return subtrees.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 	private void addRhymesToGrammar() {

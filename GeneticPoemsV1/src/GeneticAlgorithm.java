@@ -29,7 +29,7 @@ public class GeneticAlgorithm {
 	
 	public static void main(String[] args) {
 		fitnessCalculator = new FitnessCalculator();
-		int runs = 1;
+		int runs = 5;
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
 		averageValues.put("fittest", new double[maxGenNum]);

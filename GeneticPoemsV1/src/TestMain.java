@@ -152,12 +152,13 @@ public class TestMain {
 		System.out.println();
 //		"their folk snipes"
 //		"these folk can scorch"
-		System.out.println(RiTa.getSyllables("override"));
-		System.out.println(RiTa.getSyllables("capitulate"));
 		
-		System.out.println("Emotion Fitness: " + fitnessCalculator.calculateEmotionFitness(firstPoem));
-		System.out.println("Emotion Fitness: " + fitnessCalculator.calculateEmotionFitness(secondPoem));
-		
+		System.out.println(firstPoem);
+		for (int i=0; i<300; i++) {
+			Mutation.subtreeMutation(firstPoem);
+		}
+		//System.out.println(firstPoem);
+
 	}
 	
 	public static TreeMap<String, ArrayList<String>> writeRhymeWordList(int length) {

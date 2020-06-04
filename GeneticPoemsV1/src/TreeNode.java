@@ -83,7 +83,7 @@ public class TreeNode {
 		ArrayList<Tree> subtrees = new ArrayList<Tree>();
 		if (category.equals(this.category)) {
 			subtrees.add(new Tree(this));
-			System.out.println("found subtree " + category);
+			//System.out.println("found subtree " + category);
 		}
 		if (hasChildren()) {
 			subtrees.addAll(leftChild.getSubTrees(category));
