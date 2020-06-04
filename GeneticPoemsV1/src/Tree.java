@@ -37,7 +37,7 @@ public class Tree {
 		ArrayList<Tree> subtrees = root.getSubTrees(category);
 		
 		if(subtrees.isEmpty()) {
-			System.out.println("no subtrees " + category);
+			//System.out.println("no subtrees " + category);
 		}
 		return subtrees;
 	}

@@ -7,11 +7,13 @@ import java.util.HashMap;
 
 public class Mutation {
 	//number of different mutation methods
-	private static int mNum = 3;
+	private static int mNum = 4;
 	
 	public static void mutate(double mutationRate, Poem poem) {
 		double p = ThreadLocalRandom.current().nextDouble();
 		if (p<=mutationRate) {
+			//subtreeMutation(poem);
+
 			int m = ThreadLocalRandom.current().nextInt(0, mNum);
 			if(m==0) {
 				singleWordMutation(poem);
@@ -22,6 +24,8 @@ public class Mutation {
 					return;
 				}
 				endWordMutation(poem);
+			} else if (m==3) {
+				subtreeMutation(poem);
 			}
 		}	
 	}
@@ -76,15 +80,17 @@ public class Mutation {
 	
 	//randomly change one subtree into another randomly creates subtree that fits the same category
 	//does not work because CYK algorithm cannot parse subtrees, only trees from complete sentences
-//	public static void subtreeMutation(Poem poem) {
-//		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
-//		ArrayList<TreeNode> chosenLine = poem.getPoemTree()[lineIndex].getPreorderArray();
-//
-//		int subtreeIndex = ThreadLocalRandom.current().nextInt(1, chosenLine.size());
-//		String category = chosenLine.get(subtreeIndex).getCategory();
-//		
-//		Tree newTree = new RandomPoemGenerator().expandGrammarFrom(category);
-//		poem.getPoemTree()[lineIndex].switchSubtree(subtreeIndex, newTree.getRoot());
-//	}
+	public static void subtreeMutation(Poem poem) {
+		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
+		ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[lineIndex].getPreorderArray();
+
+		int subtreeIndex = ThreadLocalRandom.current().nextInt(1, chosenLine.size());
+		String category = chosenLine.get(subtreeIndex).getCategory();
+		
+		Tree newTree = new RandomPoemGenerator(false).expandGrammarWith(category);
+		if (newTree != null) {
+			poem.getPoemTrees()[lineIndex].switchSubtree(subtreeIndex, newTree.getRoot());
+		}
+	}
 
 }
