@@ -141,25 +141,12 @@ public class FitnessCalculator {
 				lastWord3 = line3[line3.length-1];
 			}
 			
-//			String[] rhymes = RiTa.rhymes(lastWord1);
-//			for (int j=0; j<rhymes.length; j++) {
-//				if(rhymes[j].equals(lastWord2) || rhymes[j].equals(lastWord3)) {
-//					rhymePoints++;
-//				}
-//			}
 			if (isRhyme(lastWord1, lastWord2) ) {
 				if (!lastWord1.equals(lastWord2)) {
 					rhymePoints++;
 				}
 				//System.out.println(lastWord1 + " : " + lastWord2 + " : " + lastWord3);
 			}
-//			if(lastWord3 != "") {
-//				if (isRhyme(lastWord1, lastWord3)) {
-//					if (!lastWord1.equals(lastWord3)) {
-//						rhymePoints++;
-//					}
-//				}
-//			}
 		}
 		//number of rhyme points that is sufficient for perfect fitness
 		int maxRhymePoints = poem.length()/2;
