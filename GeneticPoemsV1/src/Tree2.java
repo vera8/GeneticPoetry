@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 
-public class Tree {
-	private TreeNode root;
-	public ArrayList<TreeNode> preorderArray;
+public class Tree2 {
+	private TreeNode2 root;
+	public ArrayList<TreeNode2> preorderArray;
 	
-	public Tree(TreeNode root) {
+	public Tree2(TreeNode2 root) {
 		this.root = root;
-		//preorderArray = RiTa.tokenize(toString(), " ");
 		preorderArray = fillPreorderArray();
 	}
 	
 	//Copy constructor
-	public Tree(Tree tree) {
+	public Tree2(Tree2 tree) {
 		this.root = tree.root.copySubtree();
 		this.preorderArray = fillPreorderArray();
 	}
@@ -33,15 +32,13 @@ public class Tree {
 	}
 	
 	//get all subtrees from certain category (~search for category)
-	public ArrayList<Tree> getSubtrees(String category) {
-		ArrayList<Tree> subtrees = root.getSubTrees(category);
-//		ArrayList<Tree> subtrees = new ArrayList<Tree>();
-//		for (TreeNode node : preorderArray) {
-//			if (node.getCategory().equals(category)) {
-//				subtrees.add(new Tree(node));
-//			}
-//		}
-		
+	public ArrayList<Tree2> getSubtrees(String category) {
+		ArrayList<Tree2> subtrees = new ArrayList<Tree2>();
+		for (TreeNode2 node : preorderArray) {
+			if (node.getCategory().equals(category)) {
+				subtrees.add(new Tree2(node));
+			}
+		}
 		if(subtrees.isEmpty()) {
 			//System.out.println("no subtrees " + category);
 		}
@@ -49,28 +46,27 @@ public class Tree {
 	}
 	
 	public boolean contains(String category) {
-		boolean contains = root.contains(category, false);
-//		boolean contains = false;
-//		for (TreeNode node : preorderArray) {
-//			if (node.getCategory().equals(category)) {
-//				contains = true;
-//			}
-//		}
+		boolean contains = false;
+		for (TreeNode2 node : preorderArray) {
+			if (node.getCategory().equals(category)) {
+				contains = true;
+			}
+		}
 		return contains;
 	}
 	
-	public ArrayList<TreeNode> fillPreorderArray(){
+	public ArrayList<TreeNode2> fillPreorderArray(){
 		return root.fillPreorderArray();	
 	}
 	
-	public void switchSubtree(int index, TreeNode newSubtree) {
-		TreeNode originalSubtree = preorderArray.get(index);
+	public void switchSubtree(int index, TreeNode2 newSubtree) {
+		TreeNode2 originalSubtree = preorderArray.get(index);
 		if (!originalSubtree.getCategory().equals(newSubtree.getCategory())) {
 			System.out.println("cannot switch");
 			return;
 		}
-		if (originalSubtree instanceof LeafNode && newSubtree instanceof LeafNode) {
-			((LeafNode) originalSubtree).setWord(((LeafNode) newSubtree).getWord());
+		if (originalSubtree instanceof LeafNode2 && newSubtree instanceof LeafNode2) {
+			((LeafNode2) originalSubtree).setWord(((LeafNode2) newSubtree).getWord());
 		} else {
 			originalSubtree.setLeftChild(newSubtree.getLeftChild());
 			if(newSubtree.getRightChild() != null) {
@@ -84,11 +80,11 @@ public class Tree {
 		
 	}
 	
-	public ArrayList<TreeNode> getPreorderArray(){
+	public ArrayList<TreeNode2> getPreorderArray(){
 		return this.preorderArray;
 	}
 	
-	public TreeNode getRoot() {
+	public TreeNode2 getRoot() {
 		return this.root;
 	}
 }

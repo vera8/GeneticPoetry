@@ -28,8 +28,9 @@ public class GeneticAlgorithm {
 	private static Poem bestPoem;
 	
 	public static void main(String[] args) {
+		long startTime = System.nanoTime();
 		fitnessCalculator = new FitnessCalculator();
-		int runs = 5;
+		int runs = 1;
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
 		averageValues.put("fittest", new double[maxGenNum]);
@@ -91,6 +92,11 @@ public class GeneticAlgorithm {
 			graph.initializeUI();
 			graph.setVisible(true);
 		});
+
+
+		long endTime   = System.nanoTime();
+		long totalTime = endTime - startTime;
+		System.out.println("Running time: " + totalTime);
 	}
 	
 	private static void geneticAlgorithm(boolean elitism, HashMap<String, double[]> savedValues) {

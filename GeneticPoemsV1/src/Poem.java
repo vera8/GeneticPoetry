@@ -2,9 +2,6 @@ import rita.RiTa;
 
 public class Poem {
 	private Tree[] poemTrees;
-	//speichern als string und als baum könnte zu problemen bei rekombination führen 
-	//-> nach jeder rekombination muss unbedingt der String geupdated werden
-	//private String[] poemString;
 	private double metricFitness =-1;
 	private double rhymeFitness = -1;
 	private double emotionFitness = -1;
@@ -115,5 +112,33 @@ public class Poem {
 			toString += line + "\n" + RiTa.getStresses(line) + "\n";
 		}
 		return toString;
+	}
+	
+	public boolean paretoDominates(Poem poem2) {
+		boolean dominates = false;
+		double metricRhymeComb = (this.metricFitness + this.rhymeFitness)/2.0;
+		double metricRhymeCombP2 = (poem2.getMetricFitness() + poem2.getRhymeFitness())/2.0;
+//		if (this.getMetricFitness() > poem2.getMetricFitness()) {
+//			dominates = true; 
+//		} else if (this.getMetricFitness() < poem2.getMetricFitness()) {
+//			return false;
+//		}
+//		if (this.getRhymeFitness() > poem2.getRhymeFitness()) {
+//			dominates = true;
+//		} else if (this.getRhymeFitness() < poem2.getRhymeFitness()) {
+//			return false;
+//		}
+		if (metricRhymeComb > metricRhymeCombP2) {
+			dominates = true;
+		} else if (metricRhymeComb < metricRhymeCombP2) {
+			return false;
+		}
+		if (this.getEmotionFitness() > poem2.getEmotionFitness()) {
+			dominates = true;
+		} else if (this.getEmotionFitness() < poem2.getEmotionFitness()) {
+			return false;
+		}
+		
+		return dominates;
 	}
 }

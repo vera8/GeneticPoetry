@@ -13,10 +13,10 @@ public class RandomPoemGenerator
 	private String file;
 	private String[][] grammar = { 
 			{"S", "NP VP", "NP VBZ"},
-			{"NP", "DET NN", "PRP$ NN"}, 
+			{"NP", "DT NN", "PRP$ NN"}, 
 			{"VP", "MD VBB", "VBZ RB", "VBD PP"},
 			{"PP", "IN NP"},
-			{"DET", "dt"},
+			{"DT", "dt"},
 			{"NN", "nn"},
 			{"PRP$", "prp$"},
 			{"VBB", "vb"},
@@ -56,11 +56,6 @@ public class RandomPoemGenerator
 		for (int i=0; i<lines; i++) {
 			poemString[i] = cfg.expand();
 			String[] temp = RiTa.tokenize(poemString[i], " ");
-			
-			//RiTa macht aus lowercase z teilweise uppercase Z, scheint ein Fehler zu sein -> workaround finden, wie zb. diese Lösing hier
-//			for (int j=0; j<temp.length; j++) {
-//				temp[j] = temp[j].toLowerCase();
-//			}
 			poemTree[i] = CYK.parseTree(temp, grammar);
 			poemTree[i].replacePos();
 			
