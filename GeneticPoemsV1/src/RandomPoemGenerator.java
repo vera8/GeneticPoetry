@@ -12,9 +12,10 @@ public class RandomPoemGenerator
 	private RiGrammar cfg;
 	private String file;
 	private String[][] grammar = { 
-			{"S", "NP VP", "NP VBZ"},
+			{"S", "NP VP", "NP VBZ", "NP AP"},
 			{"NP", "DT NN", "PRP$ NN"}, 
 			{"VP", "MD VBB", "VBZ RB", "VBD PP"},
+			{"AP", "LV JJ"},
 			{"PP", "IN NP"},
 			{"DT", "dt"},
 			{"NN", "nn"},
@@ -25,6 +26,8 @@ public class RandomPoemGenerator
 			{"MD", "md"},
 			{"IN", "in"},
 			{"RB", "rb"},
+			{"LV", "is", "looks", "seems", "feels", "remains"},
+			{"JJ", "jj"}
 	};
 	public static HashMap<String, ArrayList<String>> rhymeWords;
 	
@@ -35,6 +38,7 @@ public class RandomPoemGenerator
 	}
 	
 	private void createRiGrammar(boolean addRhymes) {
+		RiTa.SILENT = true;
 		cfg = new RiGrammar();
 		if (addRhymes)
 		{
@@ -109,9 +113,10 @@ public class RandomPoemGenerator
 		rhymeWords.put("vbz", new ArrayList<String>());
 		rhymeWords.put("vbd", new ArrayList<String>());
 		rhymeWords.put("rb", new ArrayList<String>());
+		rhymeWords.put("jj", new ArrayList<String>());
 		
 		while (rhymeWords.get("nn").size() <= length || rhymeWords.get("vb").size() <= length || rhymeWords.get("vbz").size() <= length ||
-				rhymeWords.get("vbd").size() <= length || rhymeWords.get("rb").size() <= length) {
+				rhymeWords.get("vbd").size() <= length || rhymeWords.get("rb").size() <= length || rhymeWords.get("jj").size() <= length) {
 			for (String pos : rhymeWords.keySet()) {
 				String rhymeWord = RiTa.randomWord(pos);
 				String[] rhymeList = RiTa.rhymes(rhymeWord);

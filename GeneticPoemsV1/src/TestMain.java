@@ -158,6 +158,9 @@ public class TestMain {
 			Mutation.subtreeMutation(firstPoem);
 		}
 		//System.out.println(firstPoem);
+		System.out.println(RiTa.stem("feels"));
+		System.out.println(RiTa.containsWord("looks"));
+		System.out.println(RiTa.getStresses("looks"));
 
 	}
 	
