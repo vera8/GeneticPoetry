@@ -61,7 +61,7 @@ public class Graph extends JFrame {
 		pack();
 		setTitle("Line Chart");
 		//setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	

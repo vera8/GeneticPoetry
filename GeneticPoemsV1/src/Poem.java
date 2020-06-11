@@ -37,6 +37,14 @@ public class Poem {
 		return toString;
 	}
 	
+	public String toHTMLString() {
+		String toString = "<html>";
+		for (String line : getPoemString()) {
+			toString += line + "<br>";
+		}
+		return toString;
+	}
+	
 	public String printPoemTrees() {
 		String treeString = "";
 		for (Tree line : poemTrees) {

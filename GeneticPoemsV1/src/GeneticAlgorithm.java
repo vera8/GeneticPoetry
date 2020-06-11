@@ -14,22 +14,23 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 
 public class GeneticAlgorithm {
-	private static int popSize = 1000;
-	private static int maxGenNum = 50;
-	private static int poemsSize = 4;
+	//private static int popSize = 1000;
+	//private static int maxGenNum = 50;
+	//private static int poemsSize = 4;
 	private static double initialMutationRate = 0.005;
 	private static double crossoverRate = 0.95;
 	private static int tournamentSize = 2;
-	private static int eliteSize = (int) (popSize * 0.005);
+	private static int eliteSize;
 	private static XYSeriesCollection fitnessData;
 	private static XYSeriesCollection poemVarianceC;
 	private static FitnessCalculator fitnessCalculator;
 	
 	private static Poem bestPoem;
 	
-	public static void main(String[] args) {
+	//public static void main(String[] args) {
+	public static Poem runGeneticAlgorithm(int poemSize, String metre, String emotion, int popSize, int maxGenNum) {
 		long startTime = System.nanoTime();
-		fitnessCalculator = new FitnessCalculator();
+		fitnessCalculator = new FitnessCalculator(metre, emotion);
 		int runs = 1;
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
@@ -42,8 +43,9 @@ public class GeneticAlgorithm {
 			Arrays.fill(averageValues.get(data), 0);
 		}
 		
+		eliteSize = (int) (popSize * 0.005);
 		for (int i=0; i<runs; i++) {
-			geneticAlgorithm(true, averageValues);
+			geneticAlgorithm(true, averageValues, poemSize, popSize, maxGenNum);
 		}
 		System.out.println("Best Poem after " + runs + " runs (fitness:" + bestPoem.getFitness() + ", metric: "+ bestPoem.getMetricFitness()+
 				", rhyme: " + bestPoem.getRhymeFitness() + ", emotion: " + bestPoem.getEmotionFitness() + "):");
@@ -97,16 +99,19 @@ public class GeneticAlgorithm {
 		long endTime   = System.nanoTime();
 		long totalTime = endTime - startTime;
 		System.out.println("Running time: " + totalTime);
+		return bestPoem;
 	}
 	
-	private static void geneticAlgorithm(boolean elitism, HashMap<String, double[]> savedValues) {
+	private static void geneticAlgorithm(boolean elitism, HashMap<String, double[]> savedValues, 
+			int poemSize, int popSize, int maxGenNum) {
 		if(!elitism) {
 			eliteSize = 0;
 		}
 		double mutationRate = initialMutationRate;
 		int genNum = 0;
+		
 		Population pop = new Population(popSize);
-		pop.initialzePopulation(poemsSize);
+		pop.initialzePopulation(poemSize);
 		
 		//calculate fitness
 		for (int i=0; i<popSize; i++) {
@@ -134,7 +139,8 @@ public class GeneticAlgorithm {
 		savedValues.get("popFitnessEmotion")[genNum] += avrgEmotionFitness;
 		
 		for (genNum=1; genNum<maxGenNum; genNum++) {			
-		
+			UI.progressBar.setValue(genNum);
+			
 			Poem[] newGeneration = new Poem[popSize];
 			
 			int i = 0;
