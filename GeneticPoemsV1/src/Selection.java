@@ -13,25 +13,11 @@ public class Selection {
 			if (pop.getIndividuals()[randIndex].getFitness() > winner.getFitness()) {
 				winner = pop.getIndividuals()[randIndex];
 			}
+//			if (pop.getIndividuals()[randIndex].paretoDominates(winner)) {
+//				winner = pop.getIndividuals()[randIndex];
+//			}
 		}
 		return winner;
 	}
 	
-	public static Poem[] truncationSelection(int num, Population pop) {
-		Poem[] selected = new Poem[num];
-		Arrays.sort(pop.getIndividuals(), new Comparator<Poem>() {
-			@Override
-			public int compare(Poem poem1, Poem poem2) {
-				if (poem1.getFitness() > poem2.getFitness()) {
-					return -1;
-				} else if (poem1.getFitness() < poem2.getFitness()) {
-					return 1;
-				}
-				return 0;
-			}
-		});
-		
-		selected = Arrays.copyOfRange(pop.getIndividuals(), 0, num);
-		return selected;
-	}
 }

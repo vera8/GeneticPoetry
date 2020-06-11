@@ -1,24 +1,24 @@
 import java.util.ArrayList;
 
 
-public class TreeNode {
+public class TreeNode2 {
 	protected String category;
-	private TreeNode leftChild;
-	private TreeNode rightChild;
+	private TreeNode2 leftChild;
+	private TreeNode2 rightChild;
 	
-	public TreeNode(String category) {
+	public TreeNode2(String category) {
 		this.category = category;
 		this.leftChild = null;
 		this.rightChild = null;
 	}
 	
-	public TreeNode(String category, TreeNode leftchild) {
+	public TreeNode2(String category, TreeNode2 leftchild) {
 		this.category = category;
 		this.leftChild = leftchild;
 		this.rightChild = null;
 	}
 	
-	public TreeNode(String category, TreeNode leftchild, TreeNode rightchild) {
+	public TreeNode2(String category, TreeNode2 leftchild, TreeNode2 rightchild) {
 		this.category = category;
 		this.leftChild = leftchild;
 		this.rightChild = rightchild; 
@@ -31,19 +31,19 @@ public class TreeNode {
 		return true;
 	}
 	
-	public TreeNode getLeftChild() {
+	public TreeNode2 getLeftChild() {
 		return this.leftChild;
 	}
 	
-	public TreeNode getRightChild() {
+	public TreeNode2 getRightChild() {
 		return this.rightChild;
 	}
 	
-	public void setLeftChild(TreeNode leftChild) {
+	public void setLeftChild(TreeNode2 leftChild) {
 		this.leftChild = leftChild;
 	}
 	
-	public void setRightChild(TreeNode rightChild) {
+	public void setRightChild(TreeNode2 rightChild) {
 		this.rightChild = rightChild;
 	}
 	
@@ -79,10 +79,10 @@ public class TreeNode {
 		}
 	}
 	
-	public ArrayList<Tree> getSubTrees(String category) {
-		ArrayList<Tree> subtrees = new ArrayList<Tree>();
+	public ArrayList<Tree2> getSubTrees(String category) {
+		ArrayList<Tree2> subtrees = new ArrayList<Tree2>();
 		if (category.equals(this.category)) {
-			subtrees.add(new Tree(this));
+			subtrees.add(new Tree2(this));
 			//System.out.println("found subtree " + category);
 		}
 		if (hasChildren()) {
@@ -110,8 +110,8 @@ public class TreeNode {
 		return contains;
 	}
 	
-	public ArrayList<TreeNode> fillPreorderArray(){
-		ArrayList<TreeNode> preorderArray = new ArrayList<>();
+	public ArrayList<TreeNode2> fillPreorderArray(){
+		ArrayList<TreeNode2> preorderArray = new ArrayList<>();
 		preorderArray.add(this);
 		if (leftChild!=null && rightChild!=null) {
 			preorderArray.addAll(leftChild.fillPreorderArray());
@@ -120,8 +120,8 @@ public class TreeNode {
 		return preorderArray;	
 	}
 	
-	public TreeNode copySubtree() {
-		TreeNode subtree = new TreeNode(this.category);
+	public TreeNode2 copySubtree() {
+		TreeNode2 subtree = new TreeNode2(this.category);
 		subtree.leftChild = this.leftChild.copySubtree();
 
 		if (this.rightChild != null) {
