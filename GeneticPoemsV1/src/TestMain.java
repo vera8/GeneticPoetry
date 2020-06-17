@@ -9,7 +9,7 @@ public class TestMain {
 		RandomPoemGenerator poemGenerator = new RandomPoemGenerator(false);
 		Poem firstPoem = poemGenerator.generatePoem(4);
 		Poem secondPoem = poemGenerator.generatePoem(4);
-		FitnessCalculator fitnessCalculator = new FitnessCalculator();
+		FitnessCalculator fitnessCalculator = new FitnessCalculator("iambic", "sadness");
 //		String[][] poems = new String[100][];
 		
 //		for (int i=0; i<100; i++) {

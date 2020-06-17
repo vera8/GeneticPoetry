@@ -15,12 +15,7 @@ public class FitnessCalculator {
 	
 	private EmotionLexicon emotionLexicon;
 	
-	//add more criteria with weights over time; adjust weights by experimentation
-	//syllable count
-	//rhyme
-	//emotion (using Emotion Lexicon)
-	
-	public FitnessCalculator() {
+	public FitnessCalculator(String metre, String emotion) {
 		this.emotionLexicon = new EmotionLexicon();
 		opposites = new HashMap<String, String>();
 		opposites.put("anger", "joy");
@@ -31,6 +26,18 @@ public class FitnessCalculator {
 		opposites.put("positive", "negative");
 		opposites.put("sadness", "joy");
 		opposites.put("trust", "disgust");
+		
+		if (metre.equals("iambic")) {
+			this.metre = "0101010101010101010101010101010101";
+		} else if (metre.equals("trochaic")) {
+			this.metre = "1010101010101010101010101010101010";
+		} else if (metre.equals("anapestic")) {
+			this.metre = "001001001001001001001001001001001";
+		} else if (metre.equals("dactylic")) {
+			this.metre = "100100100100100100100100100100100";
+		}
+		
+		this.emotion = emotion;
 	}
 	
 	public void calculateFitness(Poem poem) {

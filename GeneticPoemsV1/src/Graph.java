@@ -61,7 +61,7 @@ public class Graph extends JFrame {
 		pack();
 		setTitle("Line Chart");
 		//setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	
@@ -79,14 +79,14 @@ public class Graph extends JFrame {
 		);
 		
 		XYPlot plot = graph.getXYPlot();
-		var renderer = new XYLineAndShapeRenderer();
+		var renderer = new XYLineAndShapeRenderer(true, false);
 		Color[] colors = { Color.ORANGE, Color.BLUE, Color.RED, Color.CYAN, Color.GREEN, Color.PINK };
-		for (int i=0; i> dataset.getSeriesCount(); i++) {
+		for (int i=0; i< dataset.getSeriesCount(); i++) {
 			if (i>=colors.length) {
 				break;
 			}
 			renderer.setSeriesPaint(i, colors[i]);
-			renderer.setSeriesStroke(i, new BasicStroke(1.0f));
+			renderer.setSeriesStroke(i, new BasicStroke(1.5f));
 		}
 		
 		plot.setRenderer(renderer);
@@ -102,7 +102,7 @@ public class Graph extends JFrame {
 			File file = new File("C:\\Users\\Vera\\Documents\\Uni\\Bachelorarbeit\\Algorithm\\Diagramme\\"+date+"\\"+filename+"_"+date+"_"+time+".png");
 			file.getParentFile().mkdirs();
 			//ChartUtils.saveChartAsPNG(new File(filename + "_" + date + ".png") , graph, 450, 450);
-			ChartUtils.saveChartAsPNG(file , graph, 450, 450);
+			ChartUtils.saveChartAsPNG(file , graph, 600, 600);
 		}
 		
 		graphs.add(graph);
