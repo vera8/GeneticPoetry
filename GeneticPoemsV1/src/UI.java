@@ -1,10 +1,18 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 public class UI extends JFrame {
 	//JFrame window; 
@@ -23,39 +31,90 @@ public class UI extends JFrame {
 		headerPanel.add(mainLabel);
 		add(headerPanel);
 
-		JPanel inputValuesPanel = new JPanel();
-		add(inputValuesPanel);
-		inputValuesPanel.setLayout(new GridLayout(5,2));
+		JPanel poemInputValuesPanel = new JPanel();
+		Border grayBorder = BorderFactory.createLineBorder(Color.gray);
+		Border pBorder = BorderFactory.createTitledBorder("Poem Parameters");
+		Border margin = new EmptyBorder(10,10,10,10);
+		poemInputValuesPanel.setBorder(new CompoundBorder(pBorder, margin));
+		add(poemInputValuesPanel);
+		poemInputValuesPanel.setLayout(new GridLayout(3,2));
+		//poemInputValuesPanel.setLayout(new GridBagLayout());
+//		GridBagConstraints c = new GridBagConstraints();
+//		c.weightx = 1;
+//		c.weighty = 1;
+//		c.fill = GridBagConstraints.HORIZONTAL;
 		
 		JLabel pLinesLabel = new JLabel("Number of verses: ");
-		inputValuesPanel.add(pLinesLabel);
+//		c.gridx = 0; c.gridwidth = 1; c.gridy = 1;
+		poemInputValuesPanel.add(pLinesLabel);
 		SpinnerModel pLinesValue = new SpinnerNumberModel(4, 2, 8, 1);
 		JSpinner poemLinesSpinner = new JSpinner(pLinesValue);
-		inputValuesPanel.add(poemLinesSpinner);
+//		c.gridx = 1; c.gridwidth = 1; c.gridy = 1;
+		poemInputValuesPanel.add(poemLinesSpinner);
 		
 		JLabel metreLabel = new JLabel("Metre: ");
-		inputValuesPanel.add(metreLabel);
+//		c.gridx = 0; c.gridwidth = 1; c.gridy = 2;
+		poemInputValuesPanel.add(metreLabel);
 		String[] metres = {"iambic", "trochaic", "anapestic", "dactylic"};
 		JComboBox metreBox = new JComboBox(metres);
-		inputValuesPanel.add(metreBox);
+//		c.gridx = 1; c.gridwidth = 1; c.gridy = 2;
+		poemInputValuesPanel.add(metreBox);
 		
 		JLabel emotionLabel = new JLabel("Emotion: ");
-		inputValuesPanel.add(emotionLabel);
+//		c.gridx = 0; c.gridwidth = 1; c.gridy = 3;
+		poemInputValuesPanel.add(emotionLabel);
 		String[] emotions = {"sadness", "joy", "anger", "fear"};
 		JComboBox emotionBox = new JComboBox(emotions);
-		inputValuesPanel.add(emotionBox);
+//		c.gridx = 1; c.gridwidth = 1; c.gridy = 3;
+		poemInputValuesPanel.add(emotionBox);
+		
+		add(new JLabel(" "));
+		
+		JPanel gaInputValuesPanel = new JPanel();
+		gaInputValuesPanel.setLayout(new GridLayout(6,2));
+		Border gaBorder = BorderFactory.createTitledBorder("Genetic Algorithm Parameters");
+		gaInputValuesPanel.setBorder(new CompoundBorder(gaBorder, margin));
+		add(gaInputValuesPanel);
+		//gaLabel.setPreferredSize(new Dimension(200, 40));
+//		c.gridx = 0; c.gridwidth = 2; c.gridy = 0;
 		
 		JLabel popSizeLabel = new JLabel("Population size: ");
-		inputValuesPanel.add(popSizeLabel);
-		SpinnerModel popSizeValue = new SpinnerNumberModel(1000, 500, 3000, 100);
+//		c.gridx = 0; c.gridwidth = 1; c.gridy = 1;
+		gaInputValuesPanel.add(popSizeLabel);
+		SpinnerModel popSizeValue = new SpinnerNumberModel(1000, 50, 3000, 50);
 		JSpinner popSizeSpinner = new JSpinner(popSizeValue);
-		inputValuesPanel.add(popSizeSpinner);
+//		c.gridx = 1; c.gridwidth = 1; c.gridy = 1;
+		gaInputValuesPanel.add(popSizeSpinner);
 		
 		JLabel genNumLabel = new JLabel("Number of generations: ");
-		inputValuesPanel.add(genNumLabel);
+//		c.gridx = 0; c.gridwidth = 1; c.gridy = 2;
+		gaInputValuesPanel.add(genNumLabel);
 		SpinnerModel genNumValue = new SpinnerNumberModel(50, 10, 100, 1);
 		JSpinner genNumSpinner = new JSpinner(genNumValue);
-		inputValuesPanel.add(genNumSpinner);
+//		c.gridx = 1; c.gridwidth = 1; c.gridy = 2;
+		gaInputValuesPanel.add(genNumSpinner);
+		
+		JLabel recombRateLabel = new JLabel("Recombination probablilty: ");
+		gaInputValuesPanel.add(recombRateLabel);
+		SpinnerModel recombRateValue = new SpinnerNumberModel(0.90, 0.0, 1.0, 0.01);
+		JSpinner recombRateSpinner = new JSpinner(recombRateValue);
+		gaInputValuesPanel.add(recombRateSpinner);
+		
+		JLabel mutateRateLabel = new JLabel("Mutation probablilty: ");
+		gaInputValuesPanel.add(mutateRateLabel);
+		SpinnerModel mutateRateValue = new SpinnerNumberModel(0.1, 0.0, 1.0, 0.001);
+		JSpinner mutateRateSpinner = new JSpinner(mutateRateValue);
+		gaInputValuesPanel.add(mutateRateSpinner);
+		
+		JLabel runsLabel = new JLabel("Number of runs: ");
+		gaInputValuesPanel.add(runsLabel);
+		SpinnerModel runsValue = new SpinnerNumberModel(1, 1, 20, 1);
+		JSpinner runsSpinner = new JSpinner(runsValue);
+		gaInputValuesPanel.add(runsSpinner);
+		
+		JCheckBox showGraphs = new JCheckBox("Show graphs", true);
+		gaInputValuesPanel.add(showGraphs);
+		gaInputValuesPanel.add(new JLabel(" "));
 		
 		JPanel progressPanel = new JPanel();
 		progressBar = new JProgressBar(0, (int)genNumValue.getValue());
@@ -67,8 +126,14 @@ public class UI extends JFrame {
 		
 		JPanel resultPanel = new JPanel();
 		JLabel poemLabel = new JLabel("");
-		resultPanel.add(poemLabel, BorderLayout.CENTER);
-		resultPanel.setPreferredSize(new Dimension(300, 100));
+		JTextArea poemArea = new JTextArea();
+		poemArea.setPreferredSize(new Dimension(300, 200));
+		poemArea.setEditable(false);
+		resultPanel.add(poemArea, BorderLayout.CENTER);
+		//resultPanel.setPreferredSize(new Dimension(300, 100));
+		
+		JButton saveBtn = new JButton("Save Poem");
+		saveBtn.setEnabled(false);
 		
 		JPanel startBtnPanel = new JPanel();
 		JButton startGABtn = new JButton("Start Genetic Algorithm");
@@ -77,21 +142,46 @@ public class UI extends JFrame {
 		add(startBtnPanel);
 		add(progressPanel);
 		add(resultPanel);
+		add(saveBtn);
 		
 		startGABtn.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent ev) {
 				progressBar.setVisible(true);
-				progressBar.setMaximum((int)genNumValue.getValue()-1);
+				progressBar.setMaximum(((int)genNumValue.getValue()-1)*(int)runsValue.getValue());
 				startGABtn.setEnabled(false);
+				saveBtn.setEnabled(false);
+
 				Thread thread = new Thread() {
 					@Override public void run() {
 						bestPoem = GeneticAlgorithm.runGeneticAlgorithm((int)pLinesValue.getValue(), metres[metreBox.getSelectedIndex()] , 
-								emotions[emotionBox.getSelectedIndex()], (int)popSizeValue.getValue(), (int)genNumValue.getValue());
+								emotions[emotionBox.getSelectedIndex()], (int)popSizeValue.getValue(), (int)genNumValue.getValue(), 
+								(double)recombRateValue.getValue(), (double)mutateRateValue.getValue(), (int)runsValue.getValue(), 
+								showGraphs.isSelected());
 						progressBar.setVisible(false);
-						poemLabel.setText(bestPoem.toHTMLString());
+						poemArea.setText(bestPoem.toString());
+						startGABtn.setEnabled(true);
+						saveBtn.setEnabled(true);
 					}
 				};
 				thread.start();
+			}
+		});
+		
+		saveBtn.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent ev) {
+				JFrame parentFrame = new JFrame();
+				JFileChooser filechooser = new JFileChooser();
+				int selection = filechooser.showSaveDialog(parentFrame);
+				if (selection == JFileChooser.APPROVE_OPTION) {
+					File saveFile = filechooser.getSelectedFile();
+					try {
+						PrintWriter writer = new PrintWriter(saveFile);
+						writer.println(poemArea.getText());
+						writer.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 		

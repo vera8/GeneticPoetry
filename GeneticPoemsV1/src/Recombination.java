@@ -70,7 +70,7 @@ public class Recombination {
 	//this crossover function randomly selects one subtree from poem1 and searches for a subtree of the same category in poem2
 	public static Poem[] subtreeCrossover(Poem poem1, Poem poem2) {
 		int poemLength = poem1.length();
-		double p = 1.0/poemLength;
+		double p = 0.5;
 		//int crossoverPointsNum = ThreadLocalRandom.current().nextInt(1, poemLength+1);
 		for (int i=0; i<poemLength; i++) {
 			if (p>=ThreadLocalRandom.current().nextDouble()) {
