@@ -1,5 +1,6 @@
 import rita.RiTa;
 
+//implements tree node without children
 public class LeafNode extends TreeNode {
 	private String word;
 
@@ -20,6 +21,7 @@ public class LeafNode extends TreeNode {
 		return toSentence;
 	}
 	
+	//gets word from lexicon for PoS-tag
 	@Override
 	public void replacePos() {
 		try {

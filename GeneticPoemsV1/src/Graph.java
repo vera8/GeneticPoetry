@@ -22,9 +22,9 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.xy.XYDataset;
 
+//class for the graph display of fitness values throughout the generations
 public class Graph extends JFrame {
 
-	
 	private int numOfGraphs;
 	private ArrayList<JFreeChart> graphs;
 	

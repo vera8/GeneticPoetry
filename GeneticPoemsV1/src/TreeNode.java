@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 
-
+//implements a tree node with at least one child
 public class TreeNode {
+	//sentence structure category or PoS-tag
 	protected String category;
+	
 	private TreeNode leftChild;
 	private TreeNode rightChild;
 	
@@ -83,7 +85,6 @@ public class TreeNode {
 		ArrayList<Tree> subtrees = new ArrayList<Tree>();
 		if (category.equals(this.category)) {
 			subtrees.add(new Tree(this));
-			//System.out.println("found subtree " + category);
 		}
 		if (hasChildren()) {
 			subtrees.addAll(leftChild.getSubTrees(category));
@@ -95,7 +96,6 @@ public class TreeNode {
 	}
 	
 	public boolean contains(String category, boolean contains) {
-		//boolean contains;
 		if(category.equals(this.category)) {
 			System.out.println("contains " + category);
 			contains = true;
@@ -120,6 +120,7 @@ public class TreeNode {
 		return preorderArray;	
 	}
 	
+	//return deep copy of subtree
 	public TreeNode copySubtree() {
 		TreeNode subtree = new TreeNode(this.category);
 		subtree.leftChild = this.leftChild.copySubtree();

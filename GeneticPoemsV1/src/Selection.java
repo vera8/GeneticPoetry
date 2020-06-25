@@ -1,7 +1,9 @@
 import java.util.concurrent.ThreadLocalRandom;
 
+//class implementing tournament selection
 public class Selection {
 
+	//tournament selection; returns fittest poem out of tournament group
 	public static Poem tournamentSelection(int tournamentSize, Population pop) {
 		int randIndex = ThreadLocalRandom.current().nextInt(0, pop.getSize());
 		Poem winner = pop.getIndividuals()[randIndex];

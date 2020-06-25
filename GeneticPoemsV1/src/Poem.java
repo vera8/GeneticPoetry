@@ -1,7 +1,11 @@
 import rita.RiTa;
 
+//representation of a poem-individual
 public class Poem {
+	//lines of poem as trees
 	private Tree[] poemTrees;
+	
+	//fitness values
 	private double metricFitness =-1;
 	private double rhymeFitness = -1;
 	private double emotionFitness = -1;
@@ -28,14 +32,7 @@ public class Poem {
 		return toString;
 	}
 	
-	public String toHTMLString() {
-		String toString = "<html>";
-		for (String line : getPoemString()) {
-			toString += line + "<br>";
-		}
-		return toString;
-	}
-	
+	//prints nodes of poem trees
 	public String printPoemTrees() {
 		String treeString = "";
 		for (Tree line : poemTrees) {
@@ -44,7 +41,7 @@ public class Poem {
 		return treeString;
 	}
 	
-	
+	//get poem as String
 	public String[] getPoemString() {
 		String[] poemString = new String[poemTrees.length];
 		for (int i=0; i<poemString.length; i++) {
@@ -53,6 +50,7 @@ public class Poem {
 		return poemString;
 	}
 	
+	//changes a given line of the poem
 	public void changeLine(int index, Tree line) {
 		poemTrees[index] = line;
 	}
@@ -97,6 +95,7 @@ public class Poem {
 		this.emotionFitness = emotionFitness;
 	}
 	
+	//print poem with stress pattern for each line
 	public String printWithStresses() {
 		String toString = "";
 		for (String line : getPoemString()) {

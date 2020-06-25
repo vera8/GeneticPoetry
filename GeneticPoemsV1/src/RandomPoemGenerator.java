@@ -2,12 +2,11 @@ import rita.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
-
+//class containing the grammar rules and functions to generate random poems
 public class RandomPoemGenerator 
 {
 	private RiGrammar cfg;
+	//grammar rules
 	private String[][] grammar = { 
 			{"S", "NP VP", "NP VBZ", "NP AP"},
 			{"NP", "DT NN", "PRP$ NN"}, 
@@ -23,13 +22,14 @@ public class RandomPoemGenerator
 			{"MD", "md"},
 			{"IN", "in"},
 			{"RB", "rb"},
+			//manually add some linking verbs since there is no PoS-tag for them
 			{"LV", "is", "looks", "seems", "feels", "remains"},
 			{"JJ", "jj"}
 	};
 	public static HashMap<String, ArrayList<String>> rhymeWords;
 	private int totalPoemNum = 0;
 	
-	//constructor; boolean parameter to set whether or not rhyme words should be added to the grammar
+	//constructor with boolean parameter to set whether or not rhyme words should be added to the grammar
 	public RandomPoemGenerator(boolean addRhymes) {
 		createRiGrammar(addRhymes);
 	}
@@ -40,6 +40,7 @@ public class RandomPoemGenerator
 		createRiGrammar(addRhymes);
 	}
 	
+	//creates RiGrammer-Object for use of CFG
 	private void createRiGrammar(boolean addRhymes) {
 		RiTa.SILENT = true;
 		cfg = new RiGrammar();
@@ -55,6 +56,7 @@ public class RandomPoemGenerator
 		}
 	}
 	
+	//generates Poem with given number of lines
 	public Poem generatePoem(int lines) {
 		String[] poemString = new String[lines];
 		Tree[] poemTree = new Tree[lines];
@@ -71,7 +73,7 @@ public class RandomPoemGenerator
 		return poem;
 	}
 	
-	
+	//function to expand a sentence from the grammar from a certain symbol on and return its parse tree
 	public Tree expandGrammarWith(String symbol) {
 		String part = cfg.expandFrom(symbol);
 		String sentence = cfg.expandWith(part, symbol);
@@ -86,6 +88,7 @@ public class RandomPoemGenerator
 		}
 	}
 	
+	//adds rhyme word list to grammar to increase the chance of a good rhyme fitness
 	private void addRhymesToGrammar() {
 		int rhymeWordListSize = totalPoemNum*2;
 		RandomPoemGenerator.rhymeWords = writeRhymeWordList(rhymeWordListSize);
@@ -103,6 +106,7 @@ public class RandomPoemGenerator
 		}
 	}
 	
+	//creates rhyme word lists of given size
 	private HashMap<String, ArrayList<String>> writeRhymeWordList(int length) {
 		HashMap<String, ArrayList<String>> rhymeWords = new HashMap<>();
 		rhymeWords.put("nn", new ArrayList<String>());

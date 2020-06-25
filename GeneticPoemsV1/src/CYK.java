@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 
+//implements CYK-algorithm for parsing of trees from CFG-generated sentences
 public class CYK {	
 	
 	public static Tree parseTree(String[] line, String[][] grammar) {

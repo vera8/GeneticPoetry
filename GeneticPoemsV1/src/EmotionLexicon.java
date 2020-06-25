@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import rita.*;
 
+//class for parsing and saving the NRC Emotion Lexicon fom the txt-file
 public class EmotionLexicon {
 	private HashMap<String, HashMap<String, Integer>> emotionLexicon; 
 	
@@ -33,6 +34,7 @@ public class EmotionLexicon {
 		}
 	}
 	
+	//check if given word is associated with a given emotion
 	public boolean isEmotion(String word, String emotion) {
 		if (!emotionLexicon.containsKey(word)) {
 			return false;

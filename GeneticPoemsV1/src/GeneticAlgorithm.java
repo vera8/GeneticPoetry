@@ -6,24 +6,27 @@ import java.util.Arrays;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-
+//main class containing the implementation of the genetic cycle
 public class GeneticAlgorithm {
 	private static int tournamentSize = 2;
 	private static int eliteSize;
+	private static Poem bestPoem;
+	
+	//for graph data
 	private static XYSeriesCollection fitnessData;
 	private static FitnessCalculator fitnessCalculator;
 	private static double avrgFittestMetre;
 	private static double avrgFittestRhyme;
 	private static double avrgFittestEmotion;
 	
-	private static Poem bestPoem;
-	
 	public static Poem runGeneticAlgorithm(int poemSize, String metre, String emotion, int popSize, int maxGenNum, 
 			double crossoverRate, double mutationRate, int runs, boolean showGraphs) {
 		UI.progressBar.setValue(0);
+		
 		bestPoem = null;
+		
 		fitnessCalculator = new FitnessCalculator(metre, emotion);
-
+		
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
 		averageValues.put("fittest", new double[maxGenNum]);
@@ -36,17 +39,20 @@ public class GeneticAlgorithm {
 		}
 		
 		eliteSize = (int) (popSize * 0.005);
+		
+		//ensures that elite size is always at least 1
 		if (eliteSize == 0) {
 			eliteSize = 1;
 		}
 		boolean elitism = true;
-		
 
 		long preprocessingTimeAvrg = 0;
 		long runningTimeAvrg = 0;
 		avrgFittestMetre = 0.0;
 		avrgFittestRhyme = 0.0;
 		avrgFittestEmotion = 0.0;
+		
+		//run geneticAlgorithm a specific amout of times
 		for (int i=0; i<runs; i++) {
 			geneticAlgorithm(i, elitism, averageValues, poemSize, popSize, maxGenNum, crossoverRate, mutationRate);
 		}
@@ -56,6 +62,7 @@ public class GeneticAlgorithm {
 		avrgFittestRhyme = avrgFittestRhyme/(double)runs;
 		avrgFittestEmotion = avrgFittestEmotion/(double)runs;
 		
+		//print average values
 		System.out.println("Best Poem after " + runs + " runs (fitness:" + bestPoem.getFitness() + ", metric: "+ bestPoem.getMetricFitness()+
 				", rhyme: " + bestPoem.getRhymeFitness() + ", emotion: " + bestPoem.getEmotionFitness() + "):");
 		System.out.println(bestPoem);
@@ -65,6 +72,7 @@ public class GeneticAlgorithm {
 		System.out.println("avrg rhyme fittest: " + avrgFittestRhyme);
 		System.out.println("avrg emotion fittest: " + avrgFittestEmotion);
 		
+		//setup graphs
 		XYSeries averageFitness = new XYSeries("overall fitness");
 		XYSeries fittestIndividual = new XYSeries("fittest individual");
 		XYSeries averageMetricFitness = new XYSeries("metre fitness");
@@ -90,6 +98,7 @@ public class GeneticAlgorithm {
 		fitnessData.addSeries(averageRhymeFitness);
 		fitnessData.addSeries(averageEmotionFitness);
 		
+		//show window with graphs
 		if (showGraphs) {
 			EventQueue.invokeLater(() -> {
 				var graph = new Graph(1);
@@ -108,6 +117,7 @@ public class GeneticAlgorithm {
 		return bestPoem;
 	}
 	
+	//genetic algorithm
 	private static void geneticAlgorithm(int run, boolean elitism, HashMap<String, double[]> savedValues, 
 			int poemSize, int popSize, int maxGenNum, double crossoverRate, double initialMutationRate) {
 
@@ -117,6 +127,7 @@ public class GeneticAlgorithm {
 		double mutationRate = initialMutationRate;
 		int genNum = 0;
 		
+		//initialize population with poems
 		Population pop = new Population(popSize);
 		pop.initialzePopulation(poemSize);
 		
@@ -134,6 +145,7 @@ public class GeneticAlgorithm {
 		System.out.println(fittest.printWithStresses());
 		System.out.println(genNum + ": " + pop.getAvrgFitness());
 
+		//calculate average fitness values for generation
 		double avrgMetricFitness = pop.calculateAverageMetricFitness();
 		double avrgRhymeFitness = pop.calculateAverageRhymeFitness();
 		double avrgEmotionFitness = pop.calculateAverageEmotionFitness();
@@ -145,11 +157,13 @@ public class GeneticAlgorithm {
 		savedValues.get("popFitnessRhyme")[genNum] += avrgRhymeFitness;
 		savedValues.get("popFitnessEmotion")[genNum] += avrgEmotionFitness;
 		
+		//run genetic cycle until maxGenNum is reached
 		for (genNum=1; genNum<maxGenNum; genNum++) {			
 			UI.progressBar.setValue(genNum+((maxGenNum-1)*run));
 			
 			Poem[] newGeneration = new Poem[popSize];
 			
+			//save elite individuals
 			int i = 0;
 			if (elitism) {
 				if (eliteSize%2 != 0) {
@@ -163,6 +177,7 @@ public class GeneticAlgorithm {
 				}
 			}
 			
+			//perform selection, recombination and mutation
 			while (i<popSize) {
 				Poem parent1 = Selection.tournamentSelection(tournamentSize, pop);
 				Poem parent2 = Selection.tournamentSelection(tournamentSize, pop);
@@ -176,6 +191,7 @@ public class GeneticAlgorithm {
 				i+=2;
 			}
 			
+			//set population to newly created generation
 			pop.setIndividuals(newGeneration);
 			
 			for (int j=0; j<popSize; j++) {
@@ -193,6 +209,7 @@ public class GeneticAlgorithm {
 			}
 			
 			fittest = pop.getFittest();
+			//calculate average fitness values for generation
 			avrgMetricFitness = pop.calculateAverageMetricFitness();
 			avrgRhymeFitness = pop.calculateAverageRhymeFitness();
 			avrgEmotionFitness = pop.calculateAverageEmotionFitness();
