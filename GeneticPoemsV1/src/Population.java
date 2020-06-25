@@ -34,10 +34,6 @@ public class Population {
 		}
 	}
 	
-//	public Poem getIndividual(int index) {
-//		return individuals[index];
-//	}
-	
 	public int getSize() {
 		return size;
 	}

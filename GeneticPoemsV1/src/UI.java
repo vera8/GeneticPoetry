@@ -1,8 +1,5 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.File;
@@ -22,7 +19,6 @@ public class UI extends JFrame {
 	public UI() {
 		setTitle("Genetic Poem");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		//setLayout(new GridLayout(4, 1));
 		JPanel mainPanel = new JPanel();
 		setContentPane(mainPanel);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -32,40 +28,28 @@ public class UI extends JFrame {
 		add(headerPanel);
 
 		JPanel poemInputValuesPanel = new JPanel();
-		Border grayBorder = BorderFactory.createLineBorder(Color.gray);
 		Border pBorder = BorderFactory.createTitledBorder("Poem Parameters");
 		Border margin = new EmptyBorder(10,10,10,10);
 		poemInputValuesPanel.setBorder(new CompoundBorder(pBorder, margin));
 		add(poemInputValuesPanel);
 		poemInputValuesPanel.setLayout(new GridLayout(3,2));
-		//poemInputValuesPanel.setLayout(new GridBagLayout());
-//		GridBagConstraints c = new GridBagConstraints();
-//		c.weightx = 1;
-//		c.weighty = 1;
-//		c.fill = GridBagConstraints.HORIZONTAL;
 		
 		JLabel pLinesLabel = new JLabel("Number of verses: ");
-//		c.gridx = 0; c.gridwidth = 1; c.gridy = 1;
 		poemInputValuesPanel.add(pLinesLabel);
 		SpinnerModel pLinesValue = new SpinnerNumberModel(4, 2, 8, 1);
 		JSpinner poemLinesSpinner = new JSpinner(pLinesValue);
-//		c.gridx = 1; c.gridwidth = 1; c.gridy = 1;
 		poemInputValuesPanel.add(poemLinesSpinner);
 		
 		JLabel metreLabel = new JLabel("Metre: ");
-//		c.gridx = 0; c.gridwidth = 1; c.gridy = 2;
 		poemInputValuesPanel.add(metreLabel);
 		String[] metres = {"iambic", "trochaic", "anapestic", "dactylic"};
-		JComboBox metreBox = new JComboBox(metres);
-//		c.gridx = 1; c.gridwidth = 1; c.gridy = 2;
+		JComboBox<String> metreBox = new JComboBox<String>(metres);
 		poemInputValuesPanel.add(metreBox);
 		
 		JLabel emotionLabel = new JLabel("Emotion: ");
-//		c.gridx = 0; c.gridwidth = 1; c.gridy = 3;
 		poemInputValuesPanel.add(emotionLabel);
 		String[] emotions = {"sadness", "joy", "anger", "fear"};
-		JComboBox emotionBox = new JComboBox(emotions);
-//		c.gridx = 1; c.gridwidth = 1; c.gridy = 3;
+		JComboBox<String> emotionBox = new JComboBox<String>(emotions);
 		poemInputValuesPanel.add(emotionBox);
 		
 		add(new JLabel(" "));
@@ -75,23 +59,17 @@ public class UI extends JFrame {
 		Border gaBorder = BorderFactory.createTitledBorder("Genetic Algorithm Parameters");
 		gaInputValuesPanel.setBorder(new CompoundBorder(gaBorder, margin));
 		add(gaInputValuesPanel);
-		//gaLabel.setPreferredSize(new Dimension(200, 40));
-//		c.gridx = 0; c.gridwidth = 2; c.gridy = 0;
 		
 		JLabel popSizeLabel = new JLabel("Population size: ");
-//		c.gridx = 0; c.gridwidth = 1; c.gridy = 1;
 		gaInputValuesPanel.add(popSizeLabel);
 		SpinnerModel popSizeValue = new SpinnerNumberModel(1000, 50, 3000, 50);
 		JSpinner popSizeSpinner = new JSpinner(popSizeValue);
-//		c.gridx = 1; c.gridwidth = 1; c.gridy = 1;
 		gaInputValuesPanel.add(popSizeSpinner);
 		
 		JLabel genNumLabel = new JLabel("Number of generations: ");
-//		c.gridx = 0; c.gridwidth = 1; c.gridy = 2;
 		gaInputValuesPanel.add(genNumLabel);
 		SpinnerModel genNumValue = new SpinnerNumberModel(50, 10, 100, 1);
 		JSpinner genNumSpinner = new JSpinner(genNumValue);
-//		c.gridx = 1; c.gridwidth = 1; c.gridy = 2;
 		gaInputValuesPanel.add(genNumSpinner);
 		
 		JLabel recombRateLabel = new JLabel("Recombination probablilty: ");
@@ -125,12 +103,10 @@ public class UI extends JFrame {
 		progressBar.setVisible(false);
 		
 		JPanel resultPanel = new JPanel();
-		JLabel poemLabel = new JLabel("");
 		JTextArea poemArea = new JTextArea();
 		poemArea.setPreferredSize(new Dimension(300, 200));
 		poemArea.setEditable(false);
 		resultPanel.add(poemArea, BorderLayout.CENTER);
-		//resultPanel.setPreferredSize(new Dimension(300, 100));
 		
 		JButton saveBtn = new JButton("Save Poem");
 		saveBtn.setEnabled(false);
@@ -188,7 +164,6 @@ public class UI extends JFrame {
 		
 		Border padding = BorderFactory.createEmptyBorder(20, 20, 20, 20);
 		mainPanel.setBorder(padding);
-		//getContentPane().setPreferredSize(new Dimension(300, 400));
 		pack();
 	}
 	

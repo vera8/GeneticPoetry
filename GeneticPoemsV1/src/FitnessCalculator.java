@@ -1,11 +1,8 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
 import rita.*;
 
-//Possible enhancement: make different criteria and their weights adjustable by via user input 
-//(different metric scheme, emotion, long lines vs. short lines)
 
 public class FitnessCalculator {
 	private String metre = "0101010101010101010101010101010101";
@@ -53,24 +50,18 @@ public class FitnessCalculator {
 		poem.setRhymeFitness(rhymeFitness);
 		poem.setEmotionFitness(emotionFitness);
 		
-		//fitness = (0.4 * averageMetricFitness + 0.4 * rhymeFitness + 0.2 * emotionFitness)/*/3.0*/;
 		double weightsSum = metreWeight + rhymeWeight + emotionWeight;
 		fitness = ((metreWeight*metricFitness) + (rhymeWeight*rhymeFitness) + (emotionWeight*emotionFitness))/weightsSum;
-		//fitness = (metricFitness + rhymeFitness + emotionFitness)/3.0;
+		
 		poem.setFitness(fitness);
 	}
 
 	public double calculateMetricFitness(Poem poem) {
-		//double distance = 0.0;
-		double maxDistance = 0.0;
-		double[] fitnessPerLine = new double[poem.length()];
 		double fitness = 0.0;
 		for (int i=0; i<poem.length(); i++) {
 			String line = poem.getPoemString()[i];
 			String[] tokenizedLine = RiTa.tokenize(line, " ");
 			String stresses = RiTa.getStresses(line);
-			String[] tokenizedStresses = RiTa.tokenize(stresses, " ");
-			//stresses = stresses.replace("[", "").replace("]", "").replace("/", "").replace(" ", "");
 			stresses = stresses.replace("[", " ").replace("]", " ");
 			stresses = " " + stresses + " ";
 			
@@ -101,12 +92,6 @@ public class FitnessCalculator {
 				s++;
 			}
 			
-//			maxDistance += stresses.length();
-//			int syllableNum = stresses.length();
-//			String schemeTmp = metre.substring(0, syllableNum);
-//			fitnessPerLine[i] = 1.0 - RiTa.minEditDistance(schemeTmp, stresses, true);
-//			distance += RiTa.minEditDistance(schemeTmp, stresses);
-			
 			fitness += (double)fitnessPoints / (double) s;			
 		}
 		fitness = fitness/poem.length();
@@ -118,25 +103,17 @@ public class FitnessCalculator {
 		for (int i=1; i<poem.length(); i+=2) {
 			String[] line1 = RiTa.tokenize(poem.getPoemString()[i-1]);
 			String[] line2 = RiTa.tokenize(poem.getPoemString()[i]);
-			String[] line3 = null;
-			if(i<poem.length()-1){
-				line3 = RiTa.tokenize(poem.getPoemString()[i+1]);
-			}
+
 			String lastWord1 = line1[line1.length-1];
 			String lastWord2 = line2[line2.length-1];
-			String lastWord3 = "";
-			if (line3 != null) {
-				lastWord3 = line3[line3.length-1];
-			}
 			
 			if (isRhyme(lastWord1, lastWord2) ) {
 				if (!lastWord1.equals(lastWord2)) {
 					rhymePoints++;
 				}
-				//System.out.println(lastWord1 + " : " + lastWord2 + " : " + lastWord3);
 			}
 		}
-		//number of rhyme points that is sufficient for perfect fitness
+		//number of rhyme points that is needed for perfect fitness
 		int maxRhymePoints = poem.length()/2;
 		double rhymeFitness = 0.0;
 		if (rhymePoints >= maxRhymePoints){
@@ -206,11 +183,6 @@ public class FitnessCalculator {
 		}		
 		String[] phonemesW1 = RiTa.tokenize(RiTa.getPhonemes(word1), "-");
 		String[] phonemesW2 = RiTa.tokenize(RiTa.getPhonemes(word2), "-");
-		
-		int syllablesW1 = RiTa.tokenize(RiTa.getSyllables(word1), "/").length;
-		int syllablesW2 = RiTa.tokenize(RiTa.getSyllables(word2), "/").length;
-
-		int j=0;
 
 		String[] shorterWord;
 		if(phonemesW1.length<phonemesW2.length) {

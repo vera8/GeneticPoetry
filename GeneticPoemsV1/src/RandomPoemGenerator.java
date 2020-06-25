@@ -1,6 +1,4 @@
 import rita.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +8,6 @@ import java.util.HashMap;
 public class RandomPoemGenerator 
 {
 	private RiGrammar cfg;
-	private String file;
 	private String[][] grammar = { 
 			{"S", "NP VP", "NP VBZ", "NP AP"},
 			{"NP", "DT NN", "PRP$ NN"}, 
@@ -56,8 +53,6 @@ public class RandomPoemGenerator
 				cfg.addRule(grammar[i][0], grammar[i][j]);
 			}
 		}
-		
-		//cfg.loadFrom("C:\\Users\\Vera\\Documents\\Uni\\Bachelorarbeit\\Algorithm\\GeneticPoemsV1\\src\\grammar_files\\grammar1.json");
 	}
 	
 	public Poem generatePoem(int lines) {
@@ -80,11 +75,6 @@ public class RandomPoemGenerator
 	public Tree expandGrammarWith(String symbol) {
 		String part = cfg.expandFrom(symbol);
 		String sentence = cfg.expandWith(part, symbol);
-//		String[] sentencePart = RiTa.tokenize(cfg.expandFrom(symbol), " ");
-//		for (int i=0; i<sentencePart.length; i++) {
-//			sentencePart[i] = sentencePart[i].toLowerCase();
-//		}
-		//String[][] alteredGrammar = grammar;
 		String[] sentenceTkn = RiTa.tokenize(sentence, " ");
 		Tree tree = CYK.parseTree(sentenceTkn, grammar);
 		tree.replacePos();
@@ -98,7 +88,7 @@ public class RandomPoemGenerator
 	
 	private void addRhymesToGrammar() {
 		int rhymeWordListSize = totalPoemNum*2;
-		this.rhymeWords = writeRhymeWordList(rhymeWordListSize);
+		RandomPoemGenerator.rhymeWords = writeRhymeWordList(rhymeWordListSize);
 		for (int i=0; i<grammar.length; i++) {
 			String pos = grammar[i][0].toLowerCase();
 			if (rhymeWords.containsKey(pos)) {
@@ -132,7 +122,6 @@ public class RandomPoemGenerator
 				}
 				
 				for (int i=0; i<rhymeList.length; i++) {
-					//System.out.println(i);
 					String rwPos = RiTa.getPosTags(rhymeList[i])[0];
 					if (rhymeWords.get(rwPos)!=null) {	
 						if (rhymeWords.get(rwPos).size() <= length) {
