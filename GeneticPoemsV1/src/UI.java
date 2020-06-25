@@ -96,13 +96,13 @@ public class UI extends JFrame {
 		
 		JLabel recombRateLabel = new JLabel("Recombination probablilty: ");
 		gaInputValuesPanel.add(recombRateLabel);
-		SpinnerModel recombRateValue = new SpinnerNumberModel(0.90, 0.0, 1.0, 0.01);
+		SpinnerModel recombRateValue = new SpinnerNumberModel(0.9, 0.0, 1.0, 0.01);
 		JSpinner recombRateSpinner = new JSpinner(recombRateValue);
 		gaInputValuesPanel.add(recombRateSpinner);
 		
 		JLabel mutateRateLabel = new JLabel("Mutation probablilty: ");
 		gaInputValuesPanel.add(mutateRateLabel);
-		SpinnerModel mutateRateValue = new SpinnerNumberModel(0.1, 0.0, 1.0, 0.001);
+		SpinnerModel mutateRateValue = new SpinnerNumberModel(0.1, 0.0, 1.0, 0.01);
 		JSpinner mutateRateSpinner = new JSpinner(mutateRateValue);
 		gaInputValuesPanel.add(mutateRateSpinner);
 		
@@ -150,6 +150,7 @@ public class UI extends JFrame {
 				progressBar.setMaximum(((int)genNumValue.getValue()-1)*(int)runsValue.getValue());
 				startGABtn.setEnabled(false);
 				saveBtn.setEnabled(false);
+				poemArea.setText(" ");
 
 				Thread thread = new Thread() {
 					@Override public void run() {

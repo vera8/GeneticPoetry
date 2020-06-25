@@ -10,6 +10,8 @@ import rita.*;
 public class FitnessCalculator {
 	private String metre = "0101010101010101010101010101010101";
 	private double metreWeight = 1.0;
+	private double rhymeWeight = 1.0;
+	private double emotionWeight = 1.0;
 	private String emotion = "sadness";
 	private HashMap<String, String> opposites;
 	
@@ -41,51 +43,33 @@ public class FitnessCalculator {
 	}
 	
 	public void calculateFitness(Poem poem) {
-		double fitness;
-		double[] fitnessPerLine;
-		
-		double[] metricFitnessPerLine = calculateMetricFitness(poem);
-//		boolean penalisePoem = false;
-		double averageMetricFitness = 0.0;
-		for (int i=0; i<metricFitnessPerLine.length; i++) {
-			averageMetricFitness += metricFitnessPerLine[i];
-//			if (metricFitnessPerLine[i] < 0.5) {
-//				penalisePoem = true;
-//			}
-		}
-		averageMetricFitness = (averageMetricFitness/ (double) metricFitnessPerLine.length);
-		
-//		if (penalisePoem && averageMetricFitness > 0.2) {
-//			averageMetricFitness -= 0.2;
-//		}
-		
-		//double metricFitness = calculateMetricFitness(poem);
-		poem.setMetricFitness(averageMetricFitness);
-		
-		fitnessPerLine = metricFitnessPerLine;
-		
+		double fitness;		
+
+		double metricFitness = calculateMetricFitness(poem);
 		double rhymeFitness = calculateRhymeFitness(poem);
 		double emotionFitness = calculateEmotionFitness(poem);
 		
+		poem.setMetricFitness(metricFitness);
 		poem.setRhymeFitness(rhymeFitness);
 		poem.setEmotionFitness(emotionFitness);
 		
 		//fitness = (0.4 * averageMetricFitness + 0.4 * rhymeFitness + 0.2 * emotionFitness)/*/3.0*/;
-		//fitness = (averageMetricFitness + rhymeFitness)/2.0;
-		fitness = (averageMetricFitness + rhymeFitness + emotionFitness)/3.0;
+		double weightsSum = metreWeight + rhymeWeight + emotionWeight;
+		fitness = ((metreWeight*metricFitness) + (rhymeWeight*rhymeFitness) + (emotionWeight*emotionFitness))/weightsSum;
+		//fitness = (metricFitness + rhymeFitness + emotionFitness)/3.0;
 		poem.setFitness(fitness);
-		poem.setFitnessPerLine(fitnessPerLine);
 	}
 
-	public double[] calculateMetricFitness(Poem poem) {
-		double distance = 0.0;
+	public double calculateMetricFitness(Poem poem) {
+		//double distance = 0.0;
 		double maxDistance = 0.0;
 		double[] fitnessPerLine = new double[poem.length()];
+		double fitness = 0.0;
 		for (int i=0; i<poem.length(); i++) {
 			String line = poem.getPoemString()[i];
 			String[] tokenizedLine = RiTa.tokenize(line, " ");
 			String stresses = RiTa.getStresses(line);
-			String[] tokenizedStressed = RiTa.tokenize(stresses, " ");
+			String[] tokenizedStresses = RiTa.tokenize(stresses, " ");
 			//stresses = stresses.replace("[", "").replace("]", "").replace("/", "").replace(" ", "");
 			stresses = stresses.replace("[", " ").replace("]", " ");
 			stresses = " " + stresses + " ";
@@ -123,13 +107,10 @@ public class FitnessCalculator {
 //			fitnessPerLine[i] = 1.0 - RiTa.minEditDistance(schemeTmp, stresses, true);
 //			distance += RiTa.minEditDistance(schemeTmp, stresses);
 			
-			fitnessPerLine[i] = (double)fitnessPoints / (double) s;
+			fitness += (double)fitnessPoints / (double) s;			
 		}
-
-		double normalizedDistance = distance/maxDistance;
-		double fitness = 1.0 - normalizedDistance;
-		//return fitness;
-		return fitnessPerLine;
+		fitness = fitness/poem.length();
+		return fitness;
 	}
 	
 	private double calculateRhymeFitness(Poem poem) {

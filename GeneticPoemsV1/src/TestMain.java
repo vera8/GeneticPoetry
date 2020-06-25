@@ -144,10 +144,10 @@ public class TestMain {
 //		}
 		
 		System.out.println(firstPoem.printWithStresses());
-		double[] fitness = fitnessCalculator.calculateMetricFitness(firstPoem);
-		for(int i=0; i<fitness.length; i++) {
-			System.out.println(fitness[i]);
-		}
+		fitnessCalculator.calculateFitness(firstPoem);
+		Poem oneline = poemGenerator.generatePoem(1);
+		System.out.println(oneline.printWithStresses());
+		System.out.println(fitnessCalculator.calculateMetricFitness(oneline));
 		
 		System.out.println();
 //		"their folk snipes"

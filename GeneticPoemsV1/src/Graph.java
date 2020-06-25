@@ -102,7 +102,7 @@ public class Graph extends JFrame {
 			File file = new File("C:\\Users\\Vera\\Documents\\Uni\\Bachelorarbeit\\Algorithm\\Diagramme\\"+date+"\\"+filename+"_"+date+"_"+time+".png");
 			file.getParentFile().mkdirs();
 			//ChartUtils.saveChartAsPNG(new File(filename + "_" + date + ".png") , graph, 450, 450);
-			ChartUtils.saveChartAsPNG(file , graph, 600, 600);
+			ChartUtils.saveChartAsPNG(file , graph, 800, 600);
 		}
 		
 		graphs.add(graph);
