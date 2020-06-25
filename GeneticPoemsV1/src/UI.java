@@ -20,7 +20,7 @@ public class UI extends JFrame {
 	Poem bestPoem;
 	
 	public UI() {
-		setTitle("Genetic Poem");
+		setTitle("The Genetic Poem Creator");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		JPanel mainPanel = new JPanel();
 		setContentPane(mainPanel);
@@ -83,7 +83,7 @@ public class UI extends JFrame {
 		
 		JLabel mutateRateLabel = new JLabel("Mutation probablilty: ");
 		gaInputValuesPanel.add(mutateRateLabel);
-		SpinnerModel mutateRateValue = new SpinnerNumberModel(0.1, 0.0, 1.0, 0.01);
+		SpinnerModel mutateRateValue = new SpinnerNumberModel(0.3, 0.0, 1.0, 0.01);
 		JSpinner mutateRateSpinner = new JSpinner(mutateRateValue);
 		gaInputValuesPanel.add(mutateRateSpinner);
 		
@@ -121,7 +121,10 @@ public class UI extends JFrame {
 		add(startBtnPanel);
 		add(progressPanel);
 		add(resultPanel);
-		add(saveBtn);
+		
+		JPanel saveBtnPanel = new JPanel();
+		saveBtnPanel.add(saveBtn, BorderLayout.CENTER);
+		add(saveBtnPanel);
 		
 		startGABtn.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent ev) {
