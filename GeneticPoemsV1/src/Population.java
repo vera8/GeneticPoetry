@@ -1,11 +1,11 @@
 import java.util.Arrays;
 import java.util.Comparator;
 
+//class for saving the Poem-individuals as a population
 public class Population {
 	private int size;
 	private Poem[] individuals;
 	private double avrgFitness = -1;
-	String[][] grammar; 
 
 	public Population(int size) {
 		this.size = size;
@@ -13,11 +13,11 @@ public class Population {
 	}
 	
 	public void initialzePopulation(int lines) {
+		//automatically fills Population with new Poems upon initialization
 		RandomPoemGenerator generator = new RandomPoemGenerator(true, this.size);
 		for (int i=0; i<size; i++) {
 			individuals[i] = generator.generatePoem(lines);
 		}
-		this.grammar = generator.getGrammar();
 	}
 	
 	public void addIndividual(int index, Poem individual) {
@@ -91,6 +91,7 @@ public class Population {
 		return fittest;
 	}
 	
+	//returns sorted copy
 	public Poem[] getSortedCopy() {
 		Poem[] popCopy = new Poem[this.size];
 		for (int i=0; i<this.size; i++) {
@@ -108,34 +109,5 @@ public class Population {
 			}
 		});
 		return popCopy;
-	}
-	
-	public double calculateFitnessVariance() {
-		double variance = 0;
-		for (int i=0; i<size; i++) {
-			variance += Math.pow((individuals[i].getFitness() - avrgFitness), 2);
-		}
-		variance = variance/size;
-		return variance;
-	}
-	
-	public int calculatePoemVariance() {
-		int differenceCount = 0;
-		for (int i=0; i<size; i++) {
-			for (int j=i+1; j<size; j++) {
-				for (int k=0; k<individuals[i].getPoemString().length; k++) {
-					String line1 = individuals[i].getPoemString()[k];
-					String line2 = individuals[j].getPoemString()[k];
-					if (!line1.equals(line2)) {
-						differenceCount++;
-					} 
-				}
-			}
-		}
-		return differenceCount;
-	}
-	
-	public String[][] getGrammar(){
-		return this.grammar;
 	}
 }

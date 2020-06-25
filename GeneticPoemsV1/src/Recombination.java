@@ -1,14 +1,17 @@
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
 
+//class that implements different crossover-methods
 public class Recombination {
 	//number of different recombination methods
 	private static int rNum = 4;
 	
+	//randomly chooses a recombination method out of the implemented methods
 	public static Poem[] crossover(double crossoverRate, Poem poem1, Poem poem2) {
 		double p = ThreadLocalRandom.current().nextDouble();
 
 		if (p<=crossoverRate) {
+			//create copies of the parent poems as child poems
 			Poem child1 = new Poem(poem1);
 			Poem child2 = new Poem(poem2);
 
@@ -26,6 +29,7 @@ public class Recombination {
 		return new Poem[]{poem1, poem2};
 	}
 
+	//crossover at one point in poems
 	public static Poem[] onePointLineCrossover(Poem poem1, Poem poem2) {
 		int poemLength = poem1.length();
 		int crossoverPoint = ThreadLocalRandom.current().nextInt(1, poemLength);
@@ -38,6 +42,7 @@ public class Recombination {
 		return new Poem[]{poem1, poem2};
 	}
 	
+	//uniform crossover
 	public static Poem[] uniformLineCrossover(Poem poem1, Poem poem2) {
 		int poemLength = poem1.length();
 		
@@ -52,6 +57,7 @@ public class Recombination {
 		return new Poem[]{poem1, poem2};
 	}
 	
+	//crossover is pairs
 	public static Poem[] pairedCrossover(Poem poem1, Poem poem2) {
 		for (int i=2; i<poem1.length(); i+=2) {
 			Tree temp = poem1.getPoemTrees()[i];
@@ -65,7 +71,7 @@ public class Recombination {
 		return new Poem[]{poem1, poem2};
 	}
 
-	//this crossover function randomly selects one subtree from poem1 and searches for a subtree of the same category in poem2
+	//randomly selects one subtree from poem1 and searches for a subtree of the same category in poem2
 	public static Poem[] subtreeCrossover(Poem poem1, Poem poem2) {
 		int poemLength = poem1.length();
 		double p = 0.5;

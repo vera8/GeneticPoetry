@@ -3,16 +3,19 @@ import java.util.HashMap;
 
 import rita.*;
 
-
+//class for fitness calculations
 public class FitnessCalculator {
+	//default metre and emotion
 	private String metre = "0101010101010101010101010101010101";
+	private String emotion = "sadness";
+	
+	//weights for weighted sum of fitness values
 	private double metreWeight = 1.0;
 	private double rhymeWeight = 1.0;
 	private double emotionWeight = 1.0;
-	private String emotion = "sadness";
-	private HashMap<String, String> opposites;
 	
 	private EmotionLexicon emotionLexicon;
+	private HashMap<String, String> opposites;
 	
 	public FitnessCalculator(String metre, String emotion) {
 		this.emotionLexicon = new EmotionLexicon();
@@ -39,10 +42,11 @@ public class FitnessCalculator {
 		this.emotion = emotion;
 	}
 	
+	//calculates overall fitness with weighted sum
 	public void calculateFitness(Poem poem) {
 		double fitness;		
 
-		double metricFitness = calculateMetricFitness(poem);
+		double metricFitness = calculateMetreFitness(poem);
 		double rhymeFitness = calculateRhymeFitness(poem);
 		double emotionFitness = calculateEmotionFitness(poem);
 		
@@ -56,7 +60,8 @@ public class FitnessCalculator {
 		poem.setFitness(fitness);
 	}
 
-	public double calculateMetricFitness(Poem poem) {
+	//calculates metre fitness
+	private double calculateMetreFitness(Poem poem) {
 		double fitness = 0.0;
 		for (int i=0; i<poem.length(); i++) {
 			String line = poem.getPoemString()[i];
@@ -74,9 +79,10 @@ public class FitnessCalculator {
 					w++;
 					continue;
 				}
-				
+				//compare actual stress pattern to target pattern
 				if (stresses.charAt(j-1)==' ' && stresses.charAt(j+1)==' ') {
 					String pos = RiTa.getPosTags(tokenizedLine[w])[0];
+					//one syllable "closed class" words always fit the metric pattern
 					if (pos.equals("dt") || pos.equals("prp$") || pos.equals("md") || pos.equals("in")){
 						fitnessPoints++;	
 					} else {
@@ -98,6 +104,7 @@ public class FitnessCalculator {
 		return fitness;
 	}
 	
+	//calculates rhyme fitness
 	private double calculateRhymeFitness(Poem poem) {
 		int rhymePoints =0;
 		for (int i=1; i<poem.length(); i+=2) {
@@ -107,6 +114,7 @@ public class FitnessCalculator {
 			String lastWord1 = line1[line1.length-1];
 			String lastWord2 = line2[line2.length-1];
 			
+			//check for pair rhyme
 			if (isRhyme(lastWord1, lastWord2) ) {
 				if (!lastWord1.equals(lastWord2)) {
 					rhymePoints++;
@@ -125,7 +133,8 @@ public class FitnessCalculator {
 		return rhymeFitness;
 	}
 	
-	public double calculateEmotionFitness(Poem poem) {
+	//calculates emotion fitness
+	private double calculateEmotionFitness(Poem poem) {
 		double maxEmotionPoints = poem.length() + (poem.length()/2);
 		double emotionPoints = 0;
 		double[] emotionPointsPerLine = new double[poem.length()];
@@ -154,6 +163,7 @@ public class FitnessCalculator {
 				}
 			}
 		}
+		//check for at least one emotion word in each line
 		boolean emotionInEveryLine = true;
 		emotionPoints = 0;
 		for (int i=0; i<emotionPointsPerLine.length; i++) {
@@ -168,6 +178,7 @@ public class FitnessCalculator {
 		} else {
 			emotionFitness = emotionPoints/maxEmotionPoints;
 		}
+		//penalize for lines without emotion word
 		if (!emotionInEveryLine) {
 			if (emotionFitness > 0.5) {
 				emotionFitness -= 0.5;
@@ -177,10 +188,13 @@ public class FitnessCalculator {
 		return emotionFitness;
 	}
 	
-	public boolean isRhyme(String word1, String word2) {
+	//function to check two words for rhyme; returns true if the words rhyme
+	private boolean isRhyme(String word1, String word2) {
+		//prevent detection of equals words as rhyme
 		if (word1.equals(word2)) {
 			return false;
 		}		
+		
 		String[] phonemesW1 = RiTa.tokenize(RiTa.getPhonemes(word1), "-");
 		String[] phonemesW2 = RiTa.tokenize(RiTa.getPhonemes(word2), "-");
 

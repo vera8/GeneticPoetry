@@ -3,10 +3,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//class containing implementations of different mutation methods
 public class Mutation {
-	//number of different mutation methods
+	//number of different mutation methods implemented
 	private static int mNum = 4;
 	
+	//chooses a mutation method from the four implemented methods randomly
 	public static void mutate(double mutationRate, Poem poem) {
 		double p = ThreadLocalRandom.current().nextDouble();
 		if (p<=mutationRate) {
@@ -27,8 +29,7 @@ public class Mutation {
 		}	
 	}
 	
-	//randomly change one word into another word of the same POS
-	//take full poem as parameter or rather just one line??
+	//randomly changes one word into another word of the same POS
 	public static void singleWordMutation(Poem poem) {
 		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
 		ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[lineIndex].getPreorderArray();
@@ -75,8 +76,7 @@ public class Mutation {
 		}
 	}
 	
-	//randomly change one subtree into another randomly creates subtree that fits the same category
-	//does not work because CYK algorithm cannot parse subtrees, only trees from complete sentences
+	//randomly changes one subtree into another randomly created subtree that fits the same category
 	public static void subtreeMutation(Poem poem) {
 		int lineIndex =  ThreadLocalRandom.current().nextInt(0, poem.length());
 		ArrayList<TreeNode> chosenLine = poem.getPoemTrees()[lineIndex].getPreorderArray();

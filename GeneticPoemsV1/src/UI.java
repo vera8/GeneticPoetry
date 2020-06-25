@@ -11,8 +11,11 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-public class UI extends JFrame {
-	//JFrame window; 
+//implements user interface for a more comfortable usage of the genetic algorithm
+//allows user to specify the following parameters:
+//number of verses in poem, target metric scheme, target emotion
+//population size, max number of generations, recombination rate, mutation rate, number of runs for GA (for getting average fitness values)
+public class UI extends JFrame { 
 	public static JProgressBar progressBar;
 	Poem bestPoem;
 	
