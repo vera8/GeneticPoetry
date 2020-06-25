@@ -1,47 +1,29 @@
 import java.awt.EventQueue;
-import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Arrays;
 
-import org.jfree.chart.ChartUtils;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 
-
 public class GeneticAlgorithm {
-	//private static int popSize = 1000;
-	//private static int maxGenNum = 50;
-	//private static int poemsSize = 4;
-	//private static double initialMutationRate = 0.005;
-	//private static double crossoverRate = 0.95;
 	private static int tournamentSize = 2;
 	private static int eliteSize;
 	private static XYSeriesCollection fitnessData;
-	private static XYSeriesCollection poemVarianceC;
 	private static FitnessCalculator fitnessCalculator;
-	private static int numOfRuns;
-	private static double[] fittestVariance;
 	private static double avrgFittestMetre;
 	private static double avrgFittestRhyme;
 	private static double avrgFittestEmotion;
-	private static long[] preprocessTime;
-	private static long[] runningTime;
 	
 	private static Poem bestPoem;
 	
-	//public static void main(String[] args) {
 	public static Poem runGeneticAlgorithm(int poemSize, String metre, String emotion, int popSize, int maxGenNum, 
 			double crossoverRate, double mutationRate, int runs, boolean showGraphs) {
 		UI.progressBar.setValue(0);
-		long startTime = System.nanoTime();
 		bestPoem = null;
 		fitnessCalculator = new FitnessCalculator(metre, emotion);
-		//int runs = 1;
+
 		HashMap<String, double[]> averageValues = new HashMap<String, double[]>();
 		averageValues.put("popFitness", new double[maxGenNum]);
 		averageValues.put("fittest", new double[maxGenNum]);
@@ -59,25 +41,17 @@ public class GeneticAlgorithm {
 		}
 		boolean elitism = true;
 		
-		fittestVariance = new double[runs];
-		preprocessTime = new long[runs];
-		runningTime = new long[runs];
+
 		long preprocessingTimeAvrg = 0;
 		long runningTimeAvrg = 0;
-		double fittestVarianceAvrg = 0.0;
 		avrgFittestMetre = 0.0;
 		avrgFittestRhyme = 0.0;
 		avrgFittestEmotion = 0.0;
-		numOfRuns = runs;
 		for (int i=0; i<runs; i++) {
 			geneticAlgorithm(i, elitism, averageValues, poemSize, popSize, maxGenNum, crossoverRate, mutationRate);
-			fittestVarianceAvrg += fittestVariance[i]; 
-			preprocessingTimeAvrg += preprocessTime[i];
-			runningTimeAvrg += runningTime[i];
 		}
 		preprocessingTimeAvrg = preprocessingTimeAvrg/runs;
 		runningTimeAvrg = runningTimeAvrg/runs;
-		fittestVarianceAvrg = fittestVarianceAvrg/(double)runs;
 		avrgFittestMetre = avrgFittestMetre/(double)runs;
 		avrgFittestRhyme = avrgFittestRhyme/(double)runs;
 		avrgFittestEmotion = avrgFittestEmotion/(double)runs;
@@ -85,15 +59,11 @@ public class GeneticAlgorithm {
 		System.out.println("Best Poem after " + runs + " runs (fitness:" + bestPoem.getFitness() + ", metric: "+ bestPoem.getMetricFitness()+
 				", rhyme: " + bestPoem.getRhymeFitness() + ", emotion: " + bestPoem.getEmotionFitness() + "):");
 		System.out.println(bestPoem);
-		System.out.println("avrg fitness: " + averageValues.get("popFitness")[maxGenNum-1]/(double)runs);
+		System.out.println("avrg generation fitness: " + averageValues.get("popFitness")[maxGenNum-1]/(double)runs);
 		System.out.println("avrg fittest: " + averageValues.get("fittest")[maxGenNum-1]/(double)runs);
-//		System.out.println("metric fitness: " + averageValues.get("popFitnessMetric")[maxGenNum-1]/(double)runs);
-//		System.out.println("rhyme fitness: " + averageValues.get("popFitnessRhyme")[maxGenNum-1]/(double)runs);
-//		System.out.println("emotion fitness: " + averageValues.get("popFitnessEmotion")[maxGenNum-1]/(double)runs);
-		System.out.println("metric fittest: " + avrgFittestMetre);
-		System.out.println("rhyme fittest: " + avrgFittestRhyme);
-		System.out.println("emotion fittest: " + avrgFittestEmotion);
-		System.out.println("fittest variance: " + fittestVarianceAvrg);
+		System.out.println("avrg metric fittest: " + avrgFittestMetre);
+		System.out.println("avrg rhyme fittest: " + avrgFittestRhyme);
+		System.out.println("avrg emotion fittest: " + avrgFittestEmotion);
 		
 		XYSeries averageFitness = new XYSeries("overall fitness");
 		XYSeries fittestIndividual = new XYSeries("fittest individual");
@@ -124,14 +94,9 @@ public class GeneticAlgorithm {
 			EventQueue.invokeLater(() -> {
 				var graph = new Graph(1);
 				try {
-					graph.createGraph(fitnessData, "Generational Fitness: pop size: " + popSize + "; gen num: "+ maxGenNum + 
+					graph.createGraph(fitnessData, "pop size: " + popSize + "; gen num: "+ maxGenNum + 
 							"; mutation rate: " + mutationRate + "; crossover rate: " + crossoverRate + "; elite size: " + eliteSize + "; runs: " + runs, 
-							"generation number", "fitness", true, "fg");
-					
-	//				graph.createGraph(poemVarianceC, ("Poem Variance: pop size: " + popSize + " ; gen num: " + maxGenNum +
-	//						"; mutation rate: " + mutationRate + "; crossover rate: " + crossoverRate + "; elite size: " + eliteSize), 
-	//						"generation number", "difference", false, "pv");
-					
+							"generation number", "fitness", true, "fg");					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -140,20 +105,12 @@ public class GeneticAlgorithm {
 				graph.setVisible(true);
 			});
 		}
-
-
-		long endTime   = System.nanoTime();
-		long totalTime = endTime - startTime;
-		System.out.println("Total running time: " + totalTime);
-		System.out.println("Avrg preprocessing time: " + ((double)preprocessingTimeAvrg/1000000000.0));
-		System.out.println("Avrg running time: " + ((double)runningTimeAvrg/1000000000.0));
-		System.out.println("Avrg total Time: " + (preprocessingTimeAvrg+runningTimeAvrg));
 		return bestPoem;
 	}
 	
 	private static void geneticAlgorithm(int run, boolean elitism, HashMap<String, double[]> savedValues, 
 			int poemSize, int popSize, int maxGenNum, double crossoverRate, double initialMutationRate) {
-		long startTime = System.nanoTime();
+
 		if(!elitism) {
 			eliteSize = 0;
 		}
@@ -162,8 +119,7 @@ public class GeneticAlgorithm {
 		
 		Population pop = new Population(popSize);
 		pop.initialzePopulation(poemSize);
-		long preprocessEndTime = System.nanoTime();
-		preprocessTime[run] = preprocessEndTime - startTime;
+		
 		//calculate fitness
 		for (int i=0; i<popSize; i++) {
 			fitnessCalculator.calculateFitness(pop.getIndividuals()[i]);
@@ -258,14 +214,5 @@ public class GeneticAlgorithm {
 		
 		System.out.println("fittest: " + fittest.getFitness());
 		System.out.println(fittest.printWithStresses());
-		System.out.println(pop.getIndividuals()[23]);
-		System.out.println(pop.getIndividuals()[12]);
-		for (int i=0; i<popSize; i++) {
-			fittestVariance[run] += Math.pow((pop.getIndividuals()[i].getFitness() - fittest.getFitness()), 2);			
-		}
-		fittestVariance[run] = fittestVariance[run]/(double)popSize;
-		
-		long endTime = System.nanoTime();
-		runningTime[run] = endTime - preprocessEndTime;
 	}
 }

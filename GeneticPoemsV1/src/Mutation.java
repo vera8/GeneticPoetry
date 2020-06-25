@@ -1,7 +1,5 @@
 import java.util.concurrent.ThreadLocalRandom;
 
-import rita.RiTa;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,7 +10,6 @@ public class Mutation {
 	public static void mutate(double mutationRate, Poem poem) {
 		double p = ThreadLocalRandom.current().nextDouble();
 		if (p<=mutationRate) {
-			//subtreeMutation(poem);
 
 			int m = ThreadLocalRandom.current().nextInt(0, mNum);
 			if(m==0) {

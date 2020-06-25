@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 import rita.RiTa;
 
 public class LeafNode extends TreeNode {
@@ -28,7 +26,6 @@ public class LeafNode extends TreeNode {
 			this.word = RiTa.randomWord(this.category);
 		} catch (rita.RiTaException re) {
 			this.word = this.category;
-			//this.category = RiTa.getPosTags(this.word)[0];
 		}
 		
 	}

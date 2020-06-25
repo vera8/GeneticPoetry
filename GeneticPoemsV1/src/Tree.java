@@ -6,7 +6,6 @@ public class Tree {
 	
 	public Tree(TreeNode root) {
 		this.root = root;
-		//preorderArray = RiTa.tokenize(toString(), " ");
 		preorderArray = fillPreorderArray();
 	}
 	
@@ -35,27 +34,11 @@ public class Tree {
 	//get all subtrees from certain category (~search for category)
 	public ArrayList<Tree> getSubtrees(String category) {
 		ArrayList<Tree> subtrees = root.getSubTrees(category);
-//		ArrayList<Tree> subtrees = new ArrayList<Tree>();
-//		for (TreeNode node : preorderArray) {
-//			if (node.getCategory().equals(category)) {
-//				subtrees.add(new Tree(node));
-//			}
-//		}
-		
-		if(subtrees.isEmpty()) {
-			//System.out.println("no subtrees " + category);
-		}
 		return subtrees;
 	}
 	
 	public boolean contains(String category) {
 		boolean contains = root.contains(category, false);
-//		boolean contains = false;
-//		for (TreeNode node : preorderArray) {
-//			if (node.getCategory().equals(category)) {
-//				contains = true;
-//			}
-//		}
 		return contains;
 	}
 	

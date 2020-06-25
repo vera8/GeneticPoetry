@@ -1,5 +1,3 @@
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Selection {
@@ -13,9 +11,6 @@ public class Selection {
 			if (pop.getIndividuals()[randIndex].getFitness() > winner.getFitness()) {
 				winner = pop.getIndividuals()[randIndex];
 			}
-//			if (pop.getIndividuals()[randIndex].paretoDominates(winner)) {
-//				winner = pop.getIndividuals()[randIndex];
-//			}
 		}
 		return winner;
 	}
