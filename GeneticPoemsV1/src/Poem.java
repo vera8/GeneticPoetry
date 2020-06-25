@@ -6,17 +6,9 @@ public class Poem {
 	private double rhymeFitness = -1;
 	private double emotionFitness = -1;
 	private double fitness = -1;
-	private double[] fitnessPerLine;
 	
 	public Poem(Tree[] poemTree) {
 		this.poemTrees = poemTree;
-
-		//this.fitnessPerLine = new double[length()];
-		
-//		this.poemString = new String[poemTree.length];
-//		for (int i=0; i<poemString.length; i++) {
-//			this.poemString[i] = poemTree[i].toSentence();
-//		}
 	}
 	
 	//copy constructor
@@ -26,7 +18,6 @@ public class Poem {
 				this.poemTrees[i] = new Tree(poem.poemTrees[i]);
 		}
 		this.fitness = poem.fitness;
-		this.fitnessPerLine = poem.fitnessPerLine;
 	}
 	
 	public String toString() {
@@ -82,14 +73,6 @@ public class Poem {
 		return poemTrees.length;
 	}
 
-	public double[] getFitnessPerLine() {
-		return fitnessPerLine;
-	}
-
-	public void setFitnessPerLine(double[] fitnessPerLine) {
-		this.fitnessPerLine = fitnessPerLine;
-	}
-	
 	public void setMetricFitness(double metricFitness) {
 		this.metricFitness = metricFitness;
 	}

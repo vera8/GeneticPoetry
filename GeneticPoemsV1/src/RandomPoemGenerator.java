@@ -30,11 +30,17 @@ public class RandomPoemGenerator
 			{"JJ", "jj"}
 	};
 	public static HashMap<String, ArrayList<String>> rhymeWords;
+	private int totalPoemNum = 0;
 	
 	//constructor; boolean parameter to set whether or not rhyme words should be added to the grammar
 	public RandomPoemGenerator(boolean addRhymes) {
 		createRiGrammar(addRhymes);
-		file = "C:\\Users\\Vera\\Documents\\Uni\\Bachelorarbeit\\Algorithm\\GeneticPoemsV1\\src\\grammar_files\\grammar1.json";
+	}
+	
+	//constructor with popSize parameter
+	public RandomPoemGenerator(boolean addRhymes, int popSize) {
+		this.totalPoemNum = popSize;
+		createRiGrammar(addRhymes);
 	}
 	
 	private void createRiGrammar(boolean addRhymes) {
@@ -91,7 +97,8 @@ public class RandomPoemGenerator
 	}
 	
 	private void addRhymesToGrammar() {
-		this.rhymeWords = writeRhymeWordList(2000);
+		int rhymeWordListSize = totalPoemNum*2;
+		this.rhymeWords = writeRhymeWordList(rhymeWordListSize);
 		for (int i=0; i<grammar.length; i++) {
 			String pos = grammar[i][0].toLowerCase();
 			if (rhymeWords.containsKey(pos)) {

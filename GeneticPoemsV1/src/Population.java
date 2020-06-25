@@ -13,7 +13,7 @@ public class Population {
 	}
 	
 	public void initialzePopulation(int lines) {
-		RandomPoemGenerator generator = new RandomPoemGenerator(true);
+		RandomPoemGenerator generator = new RandomPoemGenerator(true, this.size);
 		for (int i=0; i<size; i++) {
 			individuals[i] = generator.generatePoem(lines);
 		}
